@@ -2,7 +2,7 @@
   "name": "calculator-rentcap",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rent-cap.github.io/calculator/",
+  "homepage": "https://rent-cap.github.io/",
   "dependencies": {
     "@react-pdf/renderer": "^1.6.8",
     "bootstrap": "^4.3.1",
