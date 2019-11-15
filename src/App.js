@@ -21,9 +21,9 @@ class App extends React.Component {
     return (
         <div className="app-container">
           <div>
-            <div className={(this.props.location.pathname === '/') ? 'top-nav hero' : 'top-nav'}>
+            <div className={(this.props.location.pathname === '/home') ? 'top-nav hero' : 'top-nav'}>
               <div>
-                <Link to="/">
+                <Link to="/home">
                   <img src={logo} />
                 </Link>
                 <Link to="/flowchart">
