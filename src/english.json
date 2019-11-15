@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "eligible": "Am I eligible?"
+  },
+  "calculator": {
+    "title": "Rent Cap Calculator"
+  },
+  "flowchart": {
+    "title": "Are you eligible?"
+  }
+}

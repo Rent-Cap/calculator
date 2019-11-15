@@ -1,0 +1,93 @@
+
+li {
+  display: flex;
+}
+.add {
+  background: green;
+  width: 80px;
+  height: 30px;
+  font-size: 20px;
+  align-self: flex-end;
+}
+.remove {
+  background: red;
+  height: 24px;
+  width: 24px;
+  margin-right: 20px;
+}
+.rent-increases {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+}
+
+li > div > h3:first-child {
+  margin-top: 0
+}
+
+.active {
+  font-weight: 700;
+}
+
+button {
+  cursor: pointer;
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  align-items: center;
+}
+
+.top-nav > div > img {
+  margin-right: 40px;
+  cursor: pointer;
+}
+
+.top-nav > div > button {
+  margin-right: 20px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  text-align: center;
+}
+.app-container
+{
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero > div:first-child{
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.hero > div:first-child > img{
+  margin: 0
+}
+
+.hero > div:first-child > button{
+  margin: 20px;
+}
+
+.hero {
+  flex-direction: column-reverse;
+}
+
+@media only screen and (max-width: 768px) {
+  .top-nav {
+    flex-direction: column-reverse;
+  }
+  .top-nav > div:first-child {
+    display: flex;
+    flex-direction: column;
+  }
+}
