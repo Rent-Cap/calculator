@@ -4,43 +4,53 @@ import logo from './logo.svg';
 import { connect } from 'react-redux';
 import './App.css';
 import FlowChart from './FlowChart'
+import {
+  Switch,
+  withRouter,
+  Route,
+  Link
+} from "react-router-dom";
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      showCalculator: false,
-      showEligible: false,
-    }
+    this.state = {}
   }
   render() {
     const text = this.props.languages[this.props.language]
     return (
-      <div className="app-container">
-        <div>
-          <div className={(!this.state.showCalculator && !this.state.showEligible) ? 'top-nav hero' : 'top-nav'}>
-            <div>
-              <img onClick={() => this.setState({showCalculator: false, showEligible: false})} src={logo}>
-              </img>
-              <button className="btn btn-outline-primary" onClick={() => this.setState({showCalculator: false, showEligible: true})}>{text.nav.eligible}</button>
-              <button className="btn btn-outline-primary" onClick={() => this.setState({showEligible: false, showCalculator: true})}>I'm eligible (Calculator)</button>
+        <div className="app-container">
+          <div>
+            <div className={(this.props.location.pathname === '/') ? 'top-nav hero' : 'top-nav'}>
+              <div>
+                <Link to="/">
+                  <img src={logo} />
+                </Link>
+                <Link to="/flowchart">
+                  <button className="btn btn-outline-primary">{text.nav.eligible}</button>
+                </Link>
+                <Link to="/calculator">
+                  <button className="btn btn-outline-primary">I'm eligible (Calculator)</button>
+                </Link>
+              </div>
+              <div>
+                <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'english'})}>English</button>
+                <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'spanish'})}>Espanol</button>
+              </div>
             </div>
-            <div>
-              <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'english'})}>English</button>
-              <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'spanish'})}>Espanol</button>
+            <div className="container">
+              <Switch>
+                <Route path="/calculator">
+                  <Calculator />
+                </Route>
+                <Route path="/flowchart">
+                  <FlowChart />
+                </Route>
+              </Switch>
             </div>
           </div>
-          <div className="container">
-          {this.state.showCalculator &&
-            <Calculator />
-          }
-          {this.state.showEligible &&
-            <FlowChart />
-          }
-          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
     )
   }
 }
@@ -58,4 +68,4 @@ const mapStateToProps = state => {
   })
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(withRouter(App));

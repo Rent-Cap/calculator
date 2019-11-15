@@ -40,12 +40,11 @@ button {
   align-items: center;
 }
 
-.top-nav > div > img {
-  margin-right: 40px;
+.top-nav > div > a > img {
   cursor: pointer;
 }
 
-.top-nav > div > button {
+.top-nav > div > a, .top-nav > div > button {
   margin-right: 20px;
 }
 
@@ -55,31 +54,32 @@ footer {
   padding: 50px;
   text-align: center;
 }
-.app-container
-{
+.app-container {
   min-height: 800px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.hero > div:first-child{
+.hero > div:first-child {
   display: flex;
   flex-direction: column;
   margin: auto;
   margin-top: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero > div:first-child > img{
-  margin: 0
-}
-
-.hero > div:first-child > button{
+.hero > div:first-child > a{
   margin: 20px;
 }
 
 .hero {
   flex-direction: column-reverse;
+}
+
+a {
+  width: fit-content;
 }
 
 @media only screen and (max-width: 768px) {

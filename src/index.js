@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import english from './english.json'
 import spanish from './spanish.json'
+import { BrowserRouter as Router } from "react-router-dom";
 
 const language = 'english'
 
@@ -36,7 +37,9 @@ const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById('root')
 );
