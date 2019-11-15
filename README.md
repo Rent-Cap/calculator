@@ -1,3 +1,7 @@
+Implementation Details:
+
+https://docs.google.com/document/d/1IcFjxBmZRbTheXbnGTMHMFiG3NOe_ffL3XWnMZnB-4E/edit
+
 # Rent Cap
 
 This project is an effort to help Californians figure out whether the Tenant Protection Act of 2019 will protect them from excessive rent increases.
