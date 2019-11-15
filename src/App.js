@@ -3,7 +3,11 @@ import Calculator from './Calculator'
 import logo from './logo.svg';
 import { connect } from 'react-redux';
 import './App.css';
+import Footer from './components/Footer'
 import FlowChart from './FlowChart'
+import Resources from './Resources'
+import { PrimaryButton, SecondaryButton } from './components/Buttons'
+
 import {
   Switch,
   withRouter,
@@ -27,15 +31,18 @@ class App extends React.Component {
                   <img src={logo} />
                 </Link>
                 <Link to="/flowchart">
-                  <button className="btn btn-outline-primary">{text.nav.eligible}</button>
+                  <PrimaryButton>{text.nav.eligible}</PrimaryButton>
                 </Link>
                 <Link to="/calculator">
-                  <button className="btn btn-outline-primary">I'm eligible (Calculator)</button>
+                  <PrimaryButton>I'm eligible (Calculator)</PrimaryButton>
+                </Link>
+                <Link to="/resources">
+                  <PrimaryButton>Resources</PrimaryButton>
                 </Link>
               </div>
               <div>
-                <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'english'})}>English</button>
-                <button className="btn btn-outline-secondary" onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'spanish'})}>Espanol</button>
+                <SecondaryButton onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'english'})}>English</SecondaryButton>
+                <SecondaryButton onClick={() => this.props.dispatch({type: 'CHANGE_LANGUAGE', language: 'spanish'})}>Espanol</SecondaryButton>
               </div>
             </div>
             <div className="container">
@@ -46,6 +53,9 @@ class App extends React.Component {
                 <Route path="/flowchart">
                   <FlowChart />
                 </Route>
+                <Route path="/resources">
+                  <Resources />
+                </Route>
               </Switch>
             </div>
           </div>
@@ -53,12 +63,6 @@ class App extends React.Component {
         </div>
     )
   }
-}
-
-const Footer = () => {
-  return (
-    <footer>Footer goes here</footer>
-  )
 }
 
 const mapStateToProps = state => {

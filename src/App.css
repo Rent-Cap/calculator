@@ -70,6 +70,21 @@ footer {
   justify-content: center;
 }
 
+.rent-increases > ul > li > button {
+  height: 32px;
+  width: 32px;
+  position: absolute;
+  left: 20px;
+  font-size: 16px;
+}
+
+.rent-increases > button {
+  width: 64px;
+  height: 64px;
+  align-self: flex-end;
+  font-size: 24px;
+}
+
 .hero > div:first-child > a{
   margin: 20px;
 }
@@ -89,5 +104,6 @@ a {
   .top-nav > div:first-child {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 }

@@ -1,56 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { PDFViewer } from '@react-pdf/renderer';
+import Disclaimer from './components/Disclaimer';
+import MyDocument from './components/Document';
+import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from './components/Buttons'
 
-const Disclaimer = () => {
-  return (
-    <small>This does not consider local rent control ordinances, please check <a href="#">here</a> for your local laws.</small>
-  )
-}
-
-// Create styles
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4'
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1
-  }
-});
-
-const MyDocument = ({tenant, landlord, refund}) => {
-  const currentDate = new Date().toDateString();
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>Dear {landlord || '________________'},</Text>
-          <Text>According to (bill name) my rent is higher than laws allow. I am owed a refund of ${refund}.</Text>
-          <Text>Thank you,</Text>
-          <Text>{tenant || '________________'}</Text>
-          <Text>{currentDate}</Text>
-        </View>
-      </Page>
-    </Document>
-  )
-};
-
-const Letter = (props) => {
-  const currentDate = new Date().toDateString();
-  return (
-    <section>
-      <p>Dear {props.landlord || '________________'},</p>
-      <p>According to (bill name) my rent is higher than laws allow. I am owed a refund of ${props.refund}.</p>
-      <p>Thank you,</p>
-      <p>{props.tenant || '________________'}</p>
-      <p>{currentDate}</p>
-    </section>
-  )
-}
+// const Letter = (props) => {
+//   const currentDate = new Date().toDateString();
+//   return (
+//     <section>
+//       <p>Dear {props.landlord || '________________'},</p>
+//       <p>According to (bill name) my rent is higher than laws allow. I am owed a refund of ${props.refund}.</p>
+//       <p>Thank you,</p>
+//       <p>{props.tenant || '________________'}</p>
+//       <p>{currentDate}</p>
+//     </section>
+//   )
+// }
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -128,7 +94,7 @@ class Calculator extends React.Component {
       return (
         <li key={rent.id}>
           {this.state.rentIncreases.length > 1 &&
-            <button className="remove" onClick={() => that.removeRentIncrease(rent.id)}>x</button>
+            <DangerButton className="remove" onClick={() => that.removeRentIncrease(rent.id)}>&times;</DangerButton>
           }
           <div>
             <h3>When was the rent increase?</h3>
@@ -145,7 +111,7 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
-            <select onChange={(e) => this.handleInput('cpi', e)}>
+            <select data-toggle="dropdown" onChange={(e) => this.handleInput('cpi', e)}>
               <option value="0.033" label="Select your location"></option>
               <option value="0.04" label="Oakland-Hayward-San Francisco"></option>
               <option value="0.033" label="Los Angeles-Long Beach-Anaheim"></option>
@@ -164,7 +130,7 @@ class Calculator extends React.Component {
         <Disclaimer />
         <br />
         <br />
-        <button className="btn btn-outline-primary" onClick={() => this.setState({showSection: true})}>Was I overcharged?</button>
+        <PrimaryButton onClick={() => this.setState({showSection: true})}>Was I overcharged?</PrimaryButton>
         <br />
         {this.state.showSection &&
           <section>
@@ -177,11 +143,11 @@ class Calculator extends React.Component {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Did your rent increase within the year (between March 15th and now)?</h5>
-                <button onClick={() => this.setState({showRentIncrease: true})}>Yes</button><button onClick={() => this.setState({showRentIncrease: false})}>No</button>
+                <SecondaryButton onClick={() => this.setState({showRentIncrease: true})}>Yes</SecondaryButton><SecondaryButton onClick={() => this.setState({showRentIncrease: false})}>No</SecondaryButton>
                 {this.state.showRentIncrease &&
                   <section className="rent-increases">
                     <ul>{rentIncreases}</ul>
-                    <button className="add" onClick={this.addRentIncrease}>+</button>
+                    <SuccessButton className="add" onClick={this.addRentIncrease}>+</SuccessButton>
                   </section>
                 }
               </div>
@@ -191,8 +157,7 @@ class Calculator extends React.Component {
             <Disclaimer />
             <br />
             <br />
-            <button onClick={() => this.setState({showLetter: true})}>Generate a letter to your landlord
-            </button>
+            <PrimaryButton onClick={() => this.setState({showLetter: true})}>Generate a letter to your landlord</PrimaryButton>
           </section>
         }
         {this.state.showLetter &&

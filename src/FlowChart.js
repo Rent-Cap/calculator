@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
+import { PrimaryButton, SecondaryButton } from './components/Buttons'
 
 class FlowChart extends React.Component {
   constructor(props) {
@@ -46,13 +47,13 @@ class FlowChart extends React.Component {
           <li>Berkeley</li>
           <li>San Francisco</li>
         </ul>
-        <button onClick={() => this.setState({noRentControl: true})}>My city is not listed OR it has less protections than the statewide law.</button>
+        <PrimaryButton onClick={() => this.setState({noRentControl: true})}>My city is not listed OR it has less protections than the statewide law.</PrimaryButton>
         {this.state.noRentControl &&
           <div>
             <h2>Is your building over 15 years old?</h2>
             <div>
-              <button onClick={() => {setOverFifteen(true)}}>Yes</button>
-              <button onClick={() => {setOverFifteen(false)}}>No</button>
+              <SecondaryButton onClick={() => {setOverFifteen(true)}}>Yes</SecondaryButton>
+              <SecondaryButton onClick={() => {setOverFifteen(false)}}>No</SecondaryButton>
             </div>
           </div>
         }
