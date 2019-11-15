@@ -1,11 +1,43 @@
 import React from 'react'
 import { connect } from 'react-redux';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { PDFViewer } from '@react-pdf/renderer';
 
 const Disclaimer = () => {
   return (
     <small>This does not consider local rent control ordinances, please check <a href="#">here</a> for your local laws.</small>
   )
 }
+
+// Create styles
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4'
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1
+  }
+});
+
+const MyDocument = ({tenant, landlord, refund}) => {
+  const currentDate = new Date().toDateString();
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.section}>
+          <Text>Dear {landlord || '________________'},</Text>
+          <Text>According to (bill name) my rent is higher than laws allow. I am owed a refund of ${refund}.</Text>
+          <Text>Thank you,</Text>
+          <Text>{tenant || '________________'}</Text>
+          <Text>{currentDate}</Text>
+        </View>
+      </Page>
+    </Document>
+  )
+};
 
 const Letter = (props) => {
   const currentDate = new Date().toDateString();
@@ -170,7 +202,12 @@ class Calculator extends React.Component {
             <h2>What's your landlord's name?</h2>
             <input value={this.state.landlord} onChange={(e) => this.handleInput('landlord', e)}></input>
             <h1>Send this letter to your landlord:</h1>
-            <Letter tenant={this.state.tenant} landlord={this.state.landlord} refund={refund()}></Letter>
+            {/* <Letter tenant={this.state.tenant} landlord={this.state.landlord} refund={refund()}></Letter> */}
+            <PDFViewer>
+              <MyDocument tenant={this.state.tenant} landlord={this.state.landlord} refund={refund()}></MyDocument>
+            </PDFViewer>
+            <br />
+            <small>To download the pdf, right click on the PDF Viewer above and select 'Save As'</small>
           </div>
         }
       </div>
