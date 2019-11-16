@@ -1,6 +1,6 @@
 import React from 'react'
-import { connect } from 'react-redux';
 import { PrimaryButton, SecondaryButton } from './components/Buttons'
+import { withTranslation } from 'react-i18next';
 
 class FlowChart extends React.Component {
   constructor(props) {
@@ -21,8 +21,7 @@ class FlowChart extends React.Component {
       this.setState({eligible: 'unknown'})
   }
   render() {
-    const text = this.props.languages[this.props.language]
-
+    const { t } = this.props
     const setOverFifteen = val => {
       this.setState({overFifteen: val}, () => {
         this.setEligible()
@@ -41,7 +40,7 @@ class FlowChart extends React.Component {
     })
     return (
       <div>
-        <h1>{text.flowchart.title}</h1>
+        <h1>{t('eligible-title')}</h1>
         <h2>Does your city have existing ordinance</h2>
         <ul>
           <li>Berkeley</li>
@@ -77,11 +76,4 @@ class FlowChart extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return ({
-    languages: state.languages,
-    language: state.language
-  })
-};
-
-export default connect(mapStateToProps)(FlowChart);
+export default withTranslation()(FlowChart);
