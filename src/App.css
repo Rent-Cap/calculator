@@ -97,7 +97,25 @@ a {
   width: fit-content;
 }
 
-@media only screen and (max-width: 768px) {
+.top-nav-link-container {
+  display: flex;
+  align-items: center;
+}
+
+.hero .nav-links {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.hero .nav-links > a {
+  margin-bottom: 20px;
+}
+
+.nav-links > a {
+  margin-right: 10px;
+}
+
+@media only screen and (max-width: 845px) {
   .top-nav {
     flex-direction: column-reverse;
   }

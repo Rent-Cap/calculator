@@ -27,19 +27,21 @@ class App extends React.Component {
       <div className="app-container">
         <div>
           <div className={(this.props.location.pathname === '/') ? 'top-nav hero' : 'top-nav'}>
-            <div>
+            <div className="top-nav-link-container">
               <Link to="/">
-                <img src={logo} />
+                <img alt="Rent Cap Logo" src={logo} />
               </Link>
-              <Link to="/flowchart">
-                <PrimaryButton>{t('eligible')}</PrimaryButton>
-              </Link>
-              <Link to="/calculator">
-                <PrimaryButton>I'm eligible (Calculator)</PrimaryButton>
-              </Link>
-              <Link to="/resources">
-                <PrimaryButton>Resources</PrimaryButton>
-              </Link>
+              <div className="nav-links">
+                <Link to="/flowchart">
+                  <PrimaryButton>{t('eligible')}</PrimaryButton>
+                </Link>
+                <Link to="/calculator">
+                  <PrimaryButton>I'm eligible (Calculator)</PrimaryButton>
+                </Link>
+                <Link to="/resources">
+                  <PrimaryButton>Resources</PrimaryButton>
+                </Link>
+              </div>
             </div>
             <div>
               <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
@@ -61,7 +63,7 @@ class App extends React.Component {
           </div>
         </div>
         {/* Zipcode is mainly to demonstrate how to dispatch to the redux store */}
-        <div style={{display: 'flex', 'flexDirection': 'column', 'alignItems': 'center'}}>
+        <div style={{display: 'flex', marginTop: '50px', 'flexDirection': 'column', 'alignItems': 'center'}}>
           <div style={{display: 'flex', 'flexDirection': 'column', width: '200px', 'alignItems': 'center'}}>
             <input placeholder="enter your zipcode" value={zip} onChange={(e) => changeZip(e.target.value)}/>
             <small>Zipcode</small>

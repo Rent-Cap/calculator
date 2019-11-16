@@ -61,7 +61,7 @@ class Calculator extends React.Component {
     const idx = arr.findIndex(el => el.id === id)
     if (idx < 0) return
     const t = this.state.rentIncreases.slice(0)
-    const el = t.splice(idx, 1)
+    t.splice(idx, 1)
     this.setState({rentIncreases: t})
   }
   calculateMaxRent() {
