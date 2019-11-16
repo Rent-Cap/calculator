@@ -1,9 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux';
 import { PDFViewer } from '@react-pdf/renderer';
 import Disclaimer from './components/Disclaimer';
 import MyDocument from './components/Document';
 import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from './components/Buttons'
+import { withTranslation } from 'react-i18next';
 
 // const Letter = (props) => {
 //   const currentDate = new Date().toDateString();
@@ -81,8 +81,7 @@ class Calculator extends React.Component {
   }
   
   render() {
-    const text = this.props.languages[this.props.language]
-
+    const { t } = this.props
     const maxRent = this.calculateMaxRent();
     const rentIncreasePercentage = this.calculateRentIncreasePercentage();
     const refund = () => {
@@ -107,7 +106,7 @@ class Calculator extends React.Component {
     })
     return (
       <div>
-        <h1>{text.calculator.title}</h1>
+        <h1>{t('calculator-title')}</h1>
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
@@ -180,11 +179,4 @@ class Calculator extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return ({
-    languages: state.languages,
-    language: state.language
-  })
-};
-
-export default connect(mapStateToProps)(Calculator);
+export default withTranslation()(Calculator);
