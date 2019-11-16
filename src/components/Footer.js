@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer>Footer goes here</footer>
+    <footer>The information contained on this website is provided for informational purposes only, and should not be considered legal advice on any matter</footer>
   )
 }
 

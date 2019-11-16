@@ -22,11 +22,11 @@ class App extends React.Component {
     this.state = {}
   }
   render() {
-    const { t, i18n, changeZip, zip } = this.props
+    const { t, i18n, changeZip, location, zip } = this.props
     return (
       <div className="app-container">
         <div>
-          <div className={(this.props.location.pathname === '/') ? 'top-nav hero' : 'top-nav'}>
+          <div className={(location.pathname === '/') ? 'top-nav hero' : 'top-nav'}>
             <div className="top-nav-link-container">
               <Link to="/">
                 <img alt="Rent Cap Logo" src={logo} />

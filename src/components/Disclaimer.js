@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Disclaimer = () => {
   return (
-      <small>This does not consider local rent control ordinances, please check <Link to="/resources#local-ordinances">here</Link> for your local laws.</small>
+      <small>This does not consider local rent control ordinances, please check <Link to="/resources/local-ordinances">here</Link> for your local laws.</small>
   )
 }
   
