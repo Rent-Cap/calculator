@@ -24,9 +24,11 @@ Our project is open-source and under active development, so please get in touch 
 
 Ported from codepen https://codepen.io/reidjs/full/oNNaPaj. Styled with [Bootstrap](https://getbootstrap.com/docs/4.3/layout/overview/)
 
-## Adding copy
+## Adding copy and using the translator object
 
-Modify the objects in `english.json` and `spanish.json`.
+Modify the objects in `en.json` and `es.json`.
+
+This project uses [i18next react](https://react.i18next.com/) initialized as a Provider. Use the translator function `t()` to wrap text and read in from en.json or es.json.
 
 ## Available Scripts
 
@@ -58,10 +60,6 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn deploy`
-
-Builds the app for prod and pushes the build to github pages
 
 ### `yarn eject`
 
