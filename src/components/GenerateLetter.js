@@ -23,7 +23,7 @@ class GenerateLetter extends React.Component {
         <input value={this.state.tenant} type="text" onChange={(e) => this.handleInput('tenant', e)}></input>
         <h2>What's your landlord's name?</h2>
         <input value={this.state.landlord} onChange={(e) => this.handleInput('landlord', e)}></input>
-        <h2>How much is owed? {refund ? '(Value from' : ''} <Link to="/calculator">calculator</Link> {refund ? `: ${refund})` : ''}</h2>
+        <h2>How much is owed? {refund ? '(Value from' : ''} <Link to="/calculator">calculator</Link>{refund ? `: ${refund})` : ''}</h2>
         <input value={this.state.refundOverride} onChange={(e) => this.handleInput('refundOverride', e)}></input>
         <h1>Send this letter to your landlord:</h1>
         <PDFViewer>

@@ -113,6 +113,9 @@ class Calculator extends React.Component {
               <option value="0.033" label="Select your location"></option>
               <option value="0.04" label="Oakland-Hayward-San Francisco"></option>
               <option value="0.033" label="Los Angeles-Long Beach-Anaheim"></option>
+              <option value="0.022" label="San Diego-Carlsbad"></option>
+              <option value="0.028" label="Riverside-San Bernardino-Ontario"></option>
+              <option value="0.033" label="Other"></option>
             </select>
           </div>
         </div>

@@ -32,7 +32,12 @@ class FlowChart extends React.Component {
         this.setEligible()
       });
     }
-    const buildingList = [{name: 'Apartment', type: 'apartment'}, {name: 'House', type:'house'}, {name: 'Dorm', type: 'dorm'}]
+    const buildingList = [
+      {name: 'Apartment', type: 'apartment'},
+      {name: 'House', type:'house'},
+      {name: 'Dorm', type: 'dorm'},
+      {name: 'TODO: Add more building types', type: 'none'}
+    ]
     const buildings = buildingList.map(building => {
       return (
         <li style={{cursor: 'pointer'}} className={building.type === this.state.buildingType ? 'active' : ''} onClick={() => setBuildingType(building.type)} key={building.name}>{building.name}</li>
@@ -43,8 +48,9 @@ class FlowChart extends React.Component {
         <h1>{t('eligible-title')}</h1>
         <h2>Does your city have existing ordinance</h2>
         <ul>
-          <li>Berkeley</li>
-          <li>San Francisco</li>
+          <li><a href="https://www.cityofberkeley.info/Rent_Stabilization_Board/Home/Guide_to_Rent_Control.aspx" target="_blank">Berkeley</a></li>
+          <li><a href="https://sfrb.org/ordinance-regulations" target="_blank">San Francisco</a></li>
+          <li>TODO: Add more cities here.</li>
         </ul>
         <PrimaryButton onClick={() => this.setState({noRentControl: true})}>My city is not listed OR it has less protections than the statewide law.</PrimaryButton>
         {this.state.noRentControl &&
