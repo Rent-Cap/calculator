@@ -1,9 +1,10 @@
 import React from 'react'
-import { PDFViewer } from '@react-pdf/renderer';
 import Disclaimer from './components/Disclaimer';
-import MyDocument from './components/Document';
 import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from './components/Buttons'
 import { withTranslation } from 'react-i18next';
+import { handleInput } from './Helpers'
+import GenerateLetter from './components/GenerateLetter';
+import withRedux from './withRedux';
 
 // const Letter = (props) => {
 //   const currentDate = new Date().toDateString();
@@ -29,22 +30,15 @@ class Calculator extends React.Component {
       showSection: false,
       showRentIncrease: false,
       showLetter: false,
-      tenant: '',
-      landlord: '',
       rentIncreases: [{id: 0, date: '', value: 0}]
     }
-    this.handleInput = this.handleInput.bind(this)
+    this.handleInput = handleInput.bind(this)
     this.addRentIncrease = this.addRentIncrease.bind(this)
     this.removeRentIncrease = this.removeRentIncrease.bind(this)
     this.calculateRentIncreasePercentage = this.calculateRentIncreasePercentage.bind(this)
     this.calculateMaxRent = this.calculateMaxRent.bind(this)
     this.handleRentIncreaseValueChange = this.handleRentIncreaseValueChange.bind(this)
     this.handleRentIncreaseDateChange = this.handleRentIncreaseDateChange.bind(this)
-  }
-  handleInput(key, event) {
-    const obj = {}
-    obj[key] = event.target.value
-    this.setState(obj)
   }
   addRentIncrease() {
     const t = this.state.rentIncreases.slice(0)
@@ -81,13 +75,18 @@ class Calculator extends React.Component {
   }
   
   render() {
-    const { t } = this.props
+    const { t, refund, changeRefund } = this.props
     const maxRent = this.calculateMaxRent();
     const rentIncreasePercentage = this.calculateRentIncreasePercentage();
-    const refund = () => {
+    const updateRefund = () => {
       const t = parseFloat(this.state.currentRent - maxRent).toFixed(2)
-      return t > 0 ? t : '0'
+      changeRefund(t)
     }
+    // TODO: This is not a performant solution because it will update every render.
+    // Instead, put all vars the refund relies on (currentRent, maxRent, any rent increases, etc)
+    // and have the refund as a calculated value from those other values. 
+    updateRefund()
+
     const that = this;
     const rentIncreases = this.state.rentIncreases.map(rent => {
       return (
@@ -152,7 +151,7 @@ class Calculator extends React.Component {
               </div>
             </div>
             <br />
-            <h4>Your rent increased by {rentIncreasePercentage}%. Your maximum rent is {maxRent} and you should be refunded ${refund()}</h4>
+            <h4>Your rent increased by {rentIncreasePercentage}%. Your maximum rent is {maxRent} and you should be refunded ${refund}</h4>
             <Disclaimer />
             <br />
             <br />
@@ -160,23 +159,11 @@ class Calculator extends React.Component {
           </section>
         }
         {this.state.showLetter &&
-          <div>
-            <h2>What's your name?</h2>
-            <input value={this.state.tenant} type="text" onChange={(e) => this.handleInput('tenant', e)}></input>
-            <h2>What's your landlord's name?</h2>
-            <input value={this.state.landlord} onChange={(e) => this.handleInput('landlord', e)}></input>
-            <h1>Send this letter to your landlord:</h1>
-            {/* <Letter tenant={this.state.tenant} landlord={this.state.landlord} refund={refund()}></Letter> */}
-            <PDFViewer>
-              <MyDocument tenant={this.state.tenant} landlord={this.state.landlord} refund={refund()}></MyDocument>
-            </PDFViewer>
-            <br />
-            <small>To download the pdf, right click on the PDF Viewer above and select 'Save As'</small>
-          </div>
+          <GenerateLetter/>
         }
       </div>
     )
   }
 }
 
-export default withTranslation()(Calculator);
+export default withRedux(withTranslation()(Calculator));

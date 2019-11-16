@@ -61,8 +61,8 @@ class App extends React.Component {
           </div>
         </div>
         {/* Zipcode is mainly to demonstrate how to dispatch to the redux store */}
-        <div style={{display: 'flex', 'flex-direction': 'column', 'align-items': 'center'}}>
-          <div style={{display: 'flex', 'flex-direction': 'column', width: '200px', 'align-items': 'center'}}>
+        <div style={{display: 'flex', 'flexDirection': 'column', 'alignItems': 'center'}}>
+          <div style={{display: 'flex', 'flexDirection': 'column', width: '200px', 'alignItems': 'center'}}>
             <input placeholder="enter your zipcode" value={zip} onChange={(e) => changeZip(e.target.value)}/>
             <small>Zipcode</small>
           </div>

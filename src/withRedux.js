@@ -2,12 +2,14 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   return ({
-    zip: state.zip
+    zip: state.zip,
+    refund: state.refund
   })
 };
 const mapDispatchToProps = dispatch => {
   return {
-    changeZip: zip => dispatch({type: 'CHANGE_ZIP', zip})
+    changeZip: zip => dispatch({type: 'CHANGE_ZIP', zip}),
+    changeRefund: refund => dispatch({type: 'CHANGE_REFUND', refund})
   }
 };
 

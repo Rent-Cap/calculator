@@ -11,7 +11,8 @@ import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
 
 const initialState = {
-  zip: ''
+  zip: '',
+  refund: 0
 }
 
 function reducer(state = initialState, action) {
@@ -19,6 +20,10 @@ function reducer(state = initialState, action) {
     case 'CHANGE_ZIP':
       return Object.assign({}, state, {
         zip: action.zip
+      })
+    case 'CHANGE_REFUND':
+      return Object.assign({}, state, {
+        refund: action.refund
       })
     default:
       return state
