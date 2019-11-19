@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
+  // TODO: just return state?
   return ({
     zip: state.zip,
     refund: state.refund

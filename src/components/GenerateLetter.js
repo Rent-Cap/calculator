@@ -1,9 +1,9 @@
 import React from 'react'
-import MyDocument from './Document';
+import MyDocument from './MyDocument';
 import { PDFViewer } from '@react-pdf/renderer';
 import { handleInput } from '../Helpers'
 import withRedux from '../withRedux'
-import { Link } from 'react-router-dom'
+import { Link } from 'gatsby'
 
 class GenerateLetter extends React.Component {
   constructor(props) {
@@ -26,9 +26,11 @@ class GenerateLetter extends React.Component {
         <h2>How much is owed? {refund ? '(Value from' : ''} <Link to="/calculator">calculator</Link>{refund ? `: ${refund})` : ''}</h2>
         <input value={this.state.refundOverride} onChange={(e) => this.handleInput('refundOverride', e)}></input>
         <h1>Send this letter to your landlord:</h1>
-        <PDFViewer>
-          <MyDocument tenant={this.state.tenant} landlord={this.state.landlord} refund={this.state.refundOverride || refund}></MyDocument>
-        </PDFViewer>
+        { typeof window != 'undefined' && 
+          <PDFViewer>
+            <MyDocument tenant={this.state.tenant} landlord={this.state.landlord} refund={this.state.refundOverride || refund}></MyDocument>
+          </PDFViewer>
+        }
         <br />
         <small>To download the pdf, right click on the PDF Viewer above and select 'Save As'</small>
       </div>
