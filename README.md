@@ -1,15 +1,41 @@
-IMPORTANT: Any changes to gatsby-browser should be made to gatsby-ssr or there may be build issues.
+Implementation Details:
 
-1.  **Start developing.**
+https://docs.google.com/document/d/1IcFjxBmZRbTheXbnGTMHMFiG3NOe_ffL3XWnMZnB-4E/edit
 
-    ```shell
-    gatsby develop
-    ```
+# Rent Cap
+This project is an effort to help Californians figure out whether the Tenant Protection Act of 2019 will protect them from excessive rent increases.
 
-    Your site is now running at `http://localhost:8000`!
+Most renters will be affected, but our goal is to help them answer that question using publically available data based on their address.
 
-    _Note: You'll also see a second link: _`http://localhost:8000/___graphql`_. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby tutorial](https://www.gatsbyjs.org/tutorial/part-five/#introducing-graphiql)._
+Text of the bill
 
+Read more about it
+
+# Contributing
+This project was started during the 2019 National Day of Civic Hacking through the Code for SF brigade by kylpeacock@gmail.com.
+
+Our project is open-source and under active development, so please get in touch with us and contribute! We have all kinds of ways to contribute, from Copywriting to UX, as well as Front and Back-end development.
+
+# Development
+
+Ported from codepen https://codepen.io/reidjs/full/oNNaPaj. Styled with Bootstrap
+
+## Adding copy and using the translator object:
+
+Modify the objects in en.json and es.json.
+
+This project uses i18next react initialized as a Provider. Use the translator function t() to wrap text and read in from en.json or es.json.
+
+# Available Scripts
+In the project directory, you can run:
+
+`yarn install`
+
+Install dependencies
+
+`gatsby develop`
+
+Run locally on port 8000
 
 ## 🧐 What's inside?
 
@@ -60,5 +86,3 @@ Looking for more guidance? Full documentation for Gatsby lives [on the website](
 - **For most developers, we recommend starting with our [in-depth tutorial for creating a site with Gatsby](https://www.gatsbyjs.org/tutorial/).** It starts with zero assumptions about your level of ability and walks through every step of the process.
 
 - **To dive straight into code samples, head [to our documentation](https://www.gatsbyjs.org/docs/).** In particular, check out the _Guides_, _API Reference_, and _Advanced Tutorials_ sections in the sidebar.
-
-<!-- AUTO-GENERATED-CONTENT:END -->
