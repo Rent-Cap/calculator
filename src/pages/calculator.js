@@ -1,23 +1,11 @@
 import React from 'react'
-import Disclaimer from './components/Disclaimer';
-import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from './components/Buttons'
+import Disclaimer from '../components/Disclaimer';
+import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from '../components/Buttons'
 import { withTranslation } from 'react-i18next';
-import { handleInput } from './Helpers'
-import GenerateLetter from './components/GenerateLetter';
-import withRedux from './withRedux';
-
-// const Letter = (props) => {
-//   const currentDate = new Date().toDateString();
-//   return (
-//     <section>
-//       <p>Dear {props.landlord || '________________'},</p>
-//       <p>According to (bill name) my rent is higher than laws allow. I am owed a refund of ${props.refund}.</p>
-//       <p>Thank you,</p>
-//       <p>{props.tenant || '________________'}</p>
-//       <p>{currentDate}</p>
-//     </section>
-//   )
-// }
+import { handleInput } from '../Helpers'
+import GenerateLetter from '../components/GenerateLetter';
+import withRedux from '../withRedux';
+import Layout from '../components/Layout'
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -104,7 +92,7 @@ class Calculator extends React.Component {
       )
     })
     return (
-      <div>
+      <Layout>
         <h1>{t('calculator-title')}</h1>
         <div className="card">
           <div className="card-body">
@@ -164,9 +152,9 @@ class Calculator extends React.Component {
         {this.state.showLetter &&
           <GenerateLetter/>
         }
-      </div>
+      </Layout>
     )
   }
 }
 
-export default withRedux(withTranslation()(Calculator));
+export default withRedux(withTranslation()(Calculator))

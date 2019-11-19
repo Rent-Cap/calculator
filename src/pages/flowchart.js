@@ -1,6 +1,7 @@
 import React from 'react'
-import { PrimaryButton, SecondaryButton } from './components/Buttons'
+import { PrimaryButton, SecondaryButton } from '../components/Buttons'
 import { withTranslation } from 'react-i18next';
+import Layout from '../components/Layout'
 
 class FlowChart extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class FlowChart extends React.Component {
       )
     })
     return (
-      <div>
+      <Layout>
         <h1>{t('eligible-title')}</h1>
         <h2>Does your city have existing ordinance</h2>
         <ul>
@@ -77,7 +78,7 @@ class FlowChart extends React.Component {
         {this.state.eligible === 'yes' &&
           <h1>Congrats, you are eligible</h1>
         }
-      </div>
+      </Layout>
     )
   }
 }
