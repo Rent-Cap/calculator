@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export function handleInput(key, event) {
   const obj = {}
   obj[key] = event.target.value
@@ -12,15 +14,25 @@ export function calculateMaxRent(pastRent = 0, cpi = 0.033) {
 }
 
 export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
+  // NOTE: rentRanges must be sorted past --> present
   let result = 0
-  // TODO: ignore ranges before 1-1-2020
   if (rentRanges.length < 1) return result
-  const pastRent = rentRanges[0].rent
-  const maxRent = calculateMaxRent(pastRent, cpi)
+  let pastRent
+  let maxRent
+
   for(let i = 0; i < rentRanges.length; i++) {
     const rent = rentRanges[i].rent
-    const monthsPaid = rentRanges[i].totalMonthsPaid
-    result += (rent > maxRent) ? (rent - maxRent) * monthsPaid : 0
+    const daysBeforeMar152019 = moment([2019, 2, 15]).diff(rentRanges[i].startDate, 'days', true)
+
+    // skip rentRanges until we come across one >= mar 15 2019
+    if (!pastRent && daysBeforeMar152019 >= -1) {
+      pastRent = rent
+      maxRent = calculateMaxRent(pastRent, cpi)
+    } else if (pastRent) {
+      const monthsPaidAfterJan2020 = rentRanges[i].totalMonthsPaidAfterJan2020
+      result += (rent > maxRent) ? (rent - maxRent) * monthsPaidAfterJan2020 : 0
+    }
   }
+
   return parseFloat(result).toFixed(2)
 }
