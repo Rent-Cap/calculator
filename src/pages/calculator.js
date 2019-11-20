@@ -38,6 +38,8 @@ class Calculator extends React.Component {
   addRentRange(e) {
     const t = this.state.rentRanges.slice(0)
     const r = Object.assign({}, emptyRentRange2)
+    r.startDate = moment(t[t.length - 1].endDate)
+    r.endDate = moment(t[t.length - 1].endDate).add(1, 'months', true)
     r.id = +new Date()
     t.push(r)
     this.setState({rentRanges: t})
