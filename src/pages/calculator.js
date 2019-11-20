@@ -18,7 +18,8 @@ class Calculator extends React.Component {
       showSection: false,
       showRentIncrease: false,
       showLetter: false,
-      rentIncreases: [{id: 0, date: '', value: 0}]
+      rentIncreases: [{id: 0, date: '', value: 0}],
+      hiddenDateFields: {}
     }
     this.handleInput = handleInput.bind(this)
     this.addRentIncrease = this.addRentIncrease.bind(this)
@@ -27,6 +28,7 @@ class Calculator extends React.Component {
     this.calculateMaxRent = this.calculateMaxRent.bind(this)
     this.handleRentIncreaseValueChange = this.handleRentIncreaseValueChange.bind(this)
     this.handleRentIncreaseDateChange = this.handleRentIncreaseDateChange.bind(this)
+    this.toggleHiddenDateField = this.toggleHiddenDateField.bind(this)
   }
   addRentIncrease() {
     const t = this.state.rentIncreases.slice(0)
@@ -61,6 +63,12 @@ class Calculator extends React.Component {
   calculateRentIncreasePercentage() {
     return parseFloat((this.state.currentRent - this.state.pastRent)/this.state.pastRent * 100).toFixed(0);
   }
+  toggleHiddenDateField(id) {
+    const t = Object.assign({}, this.state.hiddenDateFields)
+    if (!t[id]) t[id] = false
+    t[id] = !t[id]
+    this.setState({ hiddenDateFields: t })
+  }
   
   render() {
     const { t, refund, changeRefund } = this.props
@@ -84,9 +92,11 @@ class Calculator extends React.Component {
           }
           <div>
             <h3>When was the rent increase?</h3>
-            <input onChange={(e) => that.handleRentIncreaseDateChange(rent.id, e)} type="date"></input> 
+            <input style={{ display: this.state.hiddenDateFields[rent.id] ? 'none' : 'block' }} onChange={(e) => that.handleRentIncreaseDateChange(rent.id, e)} type="date"></input> 
+            <span style={{fontWeight: '300', margin: '0 5px'}}>I don't remember</span>
+            <input onChange={() => that.toggleHiddenDateField(rent.id)} type='checkbox'></input>
             <h3>What was the new rent?</h3>
-            <input onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
+            <input type="number" onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
           </div>
         </li>
       )
@@ -97,7 +107,7 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
-            <select data-toggle="dropdown" onChange={(e) => this.handleInput('cpi', e)}>
+            <select name="cpi-picker" onChange={(e) => this.handleInput('cpi', e)}>
               <option value="0.033" label="Select your location"></option>
               <option value="0.04" label="Oakland-Hayward-San Francisco"></option>
               <option value="0.033" label="Los Angeles-Long Beach-Anaheim"></option>
@@ -126,7 +136,7 @@ class Calculator extends React.Component {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">What is your current rent?</h5>
-                <input type='number' value={this.state.currentRent} onChange={(e) => this.handleInput('currentRent', e)}></input>
+                <input type="number" value={this.state.currentRent} onChange={(e) => this.handleInput('currentRent', e)}></input>
               </div>
             </div>
             <div className="card">
