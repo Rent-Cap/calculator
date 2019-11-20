@@ -11,6 +11,8 @@ import moment from 'moment'
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
+const emptyRentRange = {value: 0, startDate: moment(), endDate: moment().subtract(2, "year"), focusedInput: null, id: 0}
+
 class Calculator extends React.Component {
   constructor(props) {
     super(props)
@@ -22,46 +24,44 @@ class Calculator extends React.Component {
       showSection: false,
       showRentIncrease: false,
       showLetter: false,
-      rentIncreases: [{id: 0, date: '', value: 0}],
-      hiddenDateFields: {},
-      startDate: moment().subtract(2, "year"),
-      endDate: moment(),
-      focusedInput: null
+      rentRanges: [emptyRentRange]
     }
     this.handleInput = handleInput.bind(this)
-    this.addRentIncrease = this.addRentIncrease.bind(this)
-    this.removeRentIncrease = this.removeRentIncrease.bind(this)
+    this.addRentRange = this.addRentRange.bind(this)
+    this.removeRentRange = this.removeRentRange.bind(this)
     this.calculateRentIncreasePercentage = this.calculateRentIncreasePercentage.bind(this)
     this.calculateMaxRent = this.calculateMaxRent.bind(this)
-    this.handleRentIncreaseValueChange = this.handleRentIncreaseValueChange.bind(this)
-    this.handleRentIncreaseDateChange = this.handleRentIncreaseDateChange.bind(this)
-    this.toggleHiddenDateField = this.toggleHiddenDateField.bind(this)
+    this.handleRentRangeValueChange = this.handleRentRangeValueChange.bind(this)
+    this.handleRentRangeDateChange = this.handleRentRangeDateChange.bind(this)
     this.handleDateChange = this.handleDateChange.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
   }
-  addRentIncrease() {
-    const t = this.state.rentIncreases.slice(0)
-    t.push({id: +new Date(), date: '', value: 0})
-    this.setState({rentIncreases: t})
+  addRentRange(e) {
+    const t = this.state.rentRanges.slice(0)
+    const r = Object.assign({}, emptyRentRange)
+    r.id = +new Date()
+    t.push(r)
+    this.setState({rentRanges: t})
   }
-  handleRentIncreaseDateChange(id, e) {
-    // TODO
+  handleRentRangeDateChange(e, idx) {
+    const t = this.state.rentRanges.slice(0)
+    t[idx].startDate = e.startDate
+    t[idx].endDate = e.endDate
+    this.setState({rentRanges: t})
   }
-  handleRentIncreaseValueChange(id, e) {
-    const t = this.state.rentIncreases.slice(0)
-    const idx = t.findIndex(el => el.id === id)
-    if (idx < 0) return
-    t[idx].value = e.target.value
-    this.setState({rentIncreases: t})
+  handleRentRangeValueChange(e, idx) {
+    console.log('value change e, idx', e.target.value, idx)
+    // const t = this.state.rentIncreases.slice(0)
+    // const idx = t.findIndex(el => el.id === id)
+    // if (idx < 0) return
+    // t[idx].value = e.target.value
+    // this.setState({rentIncreases: t})
   }
-  removeRentIncrease(id) {
-    const arr = this.state.rentIncreases
-    if (arr.length < 2) return
-    const idx = arr.findIndex(el => el.id === id)
-    if (idx < 0) return
-    const t = this.state.rentIncreases.slice(0)
+  removeRentRange(idx) {
+    const t = this.state.rentRanges.slice(0)
+    if (t.length < 2) return
     t.splice(idx, 1)
-    this.setState({rentIncreases: t})
+    this.setState({rentRanges: t})
   }
   calculateMaxRent() {
     const plusTenPercent = this.state.pastRent * 1.1
@@ -72,17 +72,13 @@ class Calculator extends React.Component {
   calculateRentIncreasePercentage() {
     return parseFloat((this.state.currentRent - this.state.pastRent)/this.state.pastRent * 100).toFixed(0);
   }
-  toggleHiddenDateField(id) {
-    const t = Object.assign({}, this.state.hiddenDateFields)
-    if (!t[id]) t[id] = false
-    t[id] = !t[id]
-    this.setState({ hiddenDateFields: t })
-  }
-  handleDateChange({ startDate, endDate }) {
+  handleDateChange({ startDate, endDate }, idx) {
     this.setState({ startDate, endDate });
   }
-  handleFocusChange(focusedInput) {
-    this.setState({ focusedInput });
+  handleFocusChange(focusedInput, idx) {
+    const t = this.state.rentRanges.slice(0)
+    t[idx].focusedInput = focusedInput
+    this.setState({ rentRanges: t });
   }
   
   render() {
@@ -97,31 +93,26 @@ class Calculator extends React.Component {
     // Instead, put all vars the refund relies on (currentRent, maxRent, any rent increases, etc)
     // and have the refund as a calculated value from those other values. 
     updateRefund()
-
+    const rentRanges = this.state.rentRanges
     const that = this;
-    const rentIncreases = this.state.rentIncreases.map(rent => {
+    const rentRangeList = rentRanges.map((rent, idx) => {
       return (
         <li key={rent.id}>
-          {this.state.rentIncreases.length > 1 &&
-            <DangerButton className="remove" onClick={() => that.removeRentIncrease(rent.id)}>&times;</DangerButton>
+          {rentRanges.length > 1 &&
+            <DangerButton className="remove" onClick={() => that.removeRentRange(idx)}>&times;</DangerButton>
           }
           <div>
-            {/* <h3>When was the rent increase?</h3>
-            <input style={{ display: this.state.hiddenDateFields[rent.id] ? 'none' : 'block' }} onChange={(e) => that.handleRentIncreaseDateChange(rent.id, e)} type="date"></input> 
-            <span style={{fontWeight: '300', margin: '0 5px'}}>I don't remember</span>
-            <input onChange={() => that.toggleHiddenDateField(rent.id)} type='checkbox'></input> */}
-            Rent: $<input type="number" onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
+            Rent: $<input type="number" onChange={(e) => this.handleRentRangeValueChange(e, idx)}></input>
             <DateRangePicker
-              endDate={this.state.endDate}
+              endDate={rentRanges[idx].endDate}
               endDateId="endDate"
-              focusedInput={this.state.focusedInput}
+              focusedInput={rentRanges[idx].focusedInput}
               isOutsideRange={() => null}
-              onDatesChange={this.handleDateChange}
-              onFocusChange={this.handleFocusChange}
-              startDate={this.state.startDate}
+              onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+              onFocusChange={(e) => this.handleFocusChange(e, idx)}
+              startDate={rentRanges[idx].startDate}
               startDateId="startDate"
             />
-            {/* TODO: Allow more than one date picker */}
           </div>
         </li>
       )
@@ -170,8 +161,8 @@ class Calculator extends React.Component {
                 <SecondaryButton onClick={() => this.setState({showRentIncrease: true})}>Yes</SecondaryButton><SecondaryButton onClick={() => this.setState({showRentIncrease: false})}>No</SecondaryButton>
                 {this.state.showRentIncrease &&
                   <section className="rent-increases">
-                    <ul>{rentIncreases}</ul>
-                    <SuccessButton className="add" onClick={this.addRentIncrease}>+</SuccessButton>
+                    <ul>{rentRangeList}</ul>
+                    <SuccessButton className="add" onClick={this.addRentRange}>+</SuccessButton>
                   </section>
                 }
               </div>
