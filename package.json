@@ -18,6 +18,7 @@
     "i18next": "^19.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
+    "react-dates": "^21.5.0",
     "react-dom": "^16.11.0",
     "react-helmet": "^5.2.1",
     "react-i18next": "^11.2.1",

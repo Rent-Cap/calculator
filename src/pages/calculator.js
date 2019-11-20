@@ -6,6 +6,10 @@ import { handleInput } from '../Helpers'
 import GenerateLetter from '../components/GenerateLetter';
 import withRedux from '../withRedux';
 import Layout from '../components/Layout'
+import { DateRangePicker } from 'react-dates';
+import moment from 'moment'
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -19,7 +23,10 @@ class Calculator extends React.Component {
       showRentIncrease: false,
       showLetter: false,
       rentIncreases: [{id: 0, date: '', value: 0}],
-      hiddenDateFields: {}
+      hiddenDateFields: {},
+      startDate: moment().subtract(2, "year"),
+      endDate: moment(),
+      focusedInput: null
     }
     this.handleInput = handleInput.bind(this)
     this.addRentIncrease = this.addRentIncrease.bind(this)
@@ -29,6 +36,8 @@ class Calculator extends React.Component {
     this.handleRentIncreaseValueChange = this.handleRentIncreaseValueChange.bind(this)
     this.handleRentIncreaseDateChange = this.handleRentIncreaseDateChange.bind(this)
     this.toggleHiddenDateField = this.toggleHiddenDateField.bind(this)
+    this.handleDateChange = this.handleDateChange.bind(this)
+    this.handleFocusChange = this.handleFocusChange.bind(this)
   }
   addRentIncrease() {
     const t = this.state.rentIncreases.slice(0)
@@ -69,6 +78,12 @@ class Calculator extends React.Component {
     t[id] = !t[id]
     this.setState({ hiddenDateFields: t })
   }
+  handleDateChange({ startDate, endDate }) {
+    this.setState({ startDate, endDate });
+  }
+  handleFocusChange(focusedInput) {
+    this.setState({ focusedInput });
+  }
   
   render() {
     const { t, refund, changeRefund } = this.props
@@ -91,12 +106,22 @@ class Calculator extends React.Component {
             <DangerButton className="remove" onClick={() => that.removeRentIncrease(rent.id)}>&times;</DangerButton>
           }
           <div>
-            <h3>When was the rent increase?</h3>
+            {/* <h3>When was the rent increase?</h3>
             <input style={{ display: this.state.hiddenDateFields[rent.id] ? 'none' : 'block' }} onChange={(e) => that.handleRentIncreaseDateChange(rent.id, e)} type="date"></input> 
             <span style={{fontWeight: '300', margin: '0 5px'}}>I don't remember</span>
-            <input onChange={() => that.toggleHiddenDateField(rent.id)} type='checkbox'></input>
-            <h3>What was the new rent?</h3>
-            <input type="number" onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
+            <input onChange={() => that.toggleHiddenDateField(rent.id)} type='checkbox'></input> */}
+            Rent: $<input type="number" onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
+            <DateRangePicker
+              endDate={this.state.endDate}
+              endDateId="endDate"
+              focusedInput={this.state.focusedInput}
+              isOutsideRange={() => null}
+              onDatesChange={this.handleDateChange}
+              onFocusChange={this.handleFocusChange}
+              startDate={this.state.startDate}
+              startDateId="startDate"
+            />
+            {/* TODO: Allow more than one date picker */}
           </div>
         </li>
       )
