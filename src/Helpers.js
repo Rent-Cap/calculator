@@ -1,29 +1,38 @@
+import moment from "moment"
+
 export function handleInput(key, event) {
   const obj = {}
   obj[key] = event.target.value
   this.setState(obj)
 }
 
-function calculateRentOverpay(rent = 1, cpi = 1) {
-  return cpi * rent
+export function calculateMaxRent(pastRent = 0, cpi = 0.033) {
+  const plusTenPercent = pastRent * 1.1
+  const cpiCalc = pastRent * (1 + 0.05 + parseFloat(cpi))
+  const min = Math.min(plusTenPercent, cpiCalc)
+  return parseFloat(min).toFixed(2)
 }
 
-// rentSnapshots = [[date1, amount1], [date2, amount2], ...]
-// date should be in unix time e.g. 1577865600000 == Jan 1, 2020 (milliseconds)
-// Snapshots must be sorted by date (past --> present)
-// currentDate defaults to now.
-export function calculateTotalAmountOwedToTenant(rentSnapshots = [], cpi = 1, currentDate = new Date()) {
+export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
+  // NOTE: rentRanges must be sorted past --> present
   let result = 0
-  // go through snapshots until we reach a date >= jan 1, 2020 and set that as the initial value
-  const start = new Date('1-1-2020')
-  for(let i = 0; i < rentSnapshots.length; i++) {
-    const date = rentSnapshots[i][0]
-    if (date < start) continue
-    const rent = rentSnapshots[i][1]
-    const nextDate = i < rentSnapshots.length - 1 ? rentSnapshots[i+1][0] : currentDate
-    // const monthDiff = ...
-    // do overPay * monthDiff and add to result
-    result += calculateRentOverpay(rent, cpi)
+  if (rentRanges.length < 1) return result
+  let pastRent
+  let maxRent
+
+  for(let i = 0; i < rentRanges.length; i++) {
+    const rent = rentRanges[i].rent
+    const daysBeforeMar152019 = moment([2019, 2, 15]).diff(rentRanges[i].startDate, 'days', true)
+
+    // skip rentRanges until we come across one >= mar 15 2019
+    if (!pastRent && daysBeforeMar152019 >= -1) {
+      pastRent = rent
+      maxRent = calculateMaxRent(pastRent, cpi)
+    } else if (pastRent) {
+      const monthsPaidAfterJan2020 = rentRanges[i].totalMonthsPaidAfterJan2020
+      result += (rent > maxRent) ? (rent - maxRent) * monthsPaidAfterJan2020 : 0
+    }
   }
-  return result
+
+  return parseFloat(result).toFixed(2)
 }

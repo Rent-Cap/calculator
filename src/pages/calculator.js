@@ -2,10 +2,17 @@ import React from 'react'
 import Disclaimer from '../components/Disclaimer';
 import { PrimaryButton, SecondaryButton, SuccessButton, DangerButton } from '../components/Buttons'
 import { withTranslation } from 'react-i18next';
-import { handleInput } from '../Helpers'
+import { handleInput, calculateTotalAmountOwedToTenant, calculateMaxRent } from '../Helpers'
 import GenerateLetter from '../components/GenerateLetter';
 import withRedux from '../withRedux';
 import Layout from '../components/Layout'
+import { DateRangePicker } from 'react-dates';
+import moment from 'moment'
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+
+const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 11, 31]), focusedInput: null, id: 0, totalMonthsPaidAfterJan2020: 0}
+const emptyRentRange2 = {rent: 0, startDate: moment([2020, 0, 1]), endDate: moment([2020, 1, 1]), focusedInput: null, id: 1, totalMonthsPaidAfterJan2020: 1}
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -13,90 +20,94 @@ class Calculator extends React.Component {
     this.state = {
       pastRent: 0,
       currentRent: 0,
-      maxRent: 0,
       cpi: 0.033,
       showSection: false,
       showRentIncrease: false,
       showLetter: false,
-      rentIncreases: [{id: 0, date: '', value: 0}],
-      hiddenDateFields: {}
+      rentRanges: [emptyRentRange1, emptyRentRange2]
     }
     this.handleInput = handleInput.bind(this)
-    this.addRentIncrease = this.addRentIncrease.bind(this)
-    this.removeRentIncrease = this.removeRentIncrease.bind(this)
+    this.addRentRange = this.addRentRange.bind(this)
+    this.removeRentRange = this.removeRentRange.bind(this)
     this.calculateRentIncreasePercentage = this.calculateRentIncreasePercentage.bind(this)
-    this.calculateMaxRent = this.calculateMaxRent.bind(this)
-    this.handleRentIncreaseValueChange = this.handleRentIncreaseValueChange.bind(this)
-    this.handleRentIncreaseDateChange = this.handleRentIncreaseDateChange.bind(this)
-    this.toggleHiddenDateField = this.toggleHiddenDateField.bind(this)
+    this.handleRentRangeValueChange = this.handleRentRangeValueChange.bind(this)
+    this.handleRentRangeDateChange = this.handleRentRangeDateChange.bind(this)
+    this.handleDateChange = this.handleDateChange.bind(this)
+    this.handleFocusChange = this.handleFocusChange.bind(this)
   }
-  addRentIncrease() {
-    const t = this.state.rentIncreases.slice(0)
-    t.push({id: +new Date(), date: '', value: 0})
-    this.setState({rentIncreases: t})
+  addRentRange(e) {
+    const t = this.state.rentRanges.slice(0)
+    const r = Object.assign({}, emptyRentRange2)
+    r.startDate = moment(t[t.length - 1].endDate)
+    r.endDate = moment(t[t.length - 1].endDate).add(1, 'months', true)
+    r.id = +new Date()
+    t.push(r)
+    this.setState({rentRanges: t})
   }
-  handleRentIncreaseDateChange(id, e) {
-    // TODO
+  handleRentRangeDateChange(e, idx) {
+    const t = this.state.rentRanges.slice(0)
+    t[idx].startDate = e.startDate || t[idx].startDate
+    t[idx].endDate = e.endDate || t[idx].endDate
+    const janFirst2020 = moment([2020, 0, 1])
+    const diff = t[idx].endDate.diff(janFirst2020, 'months', true)
+    t[idx].totalMonthsPaidAfterJan2020 = diff > 0 ? diff : 0
+    this.setState({rentRanges: t})
   }
-  handleRentIncreaseValueChange(id, e) {
-    const t = this.state.rentIncreases.slice(0)
-    const idx = t.findIndex(el => el.id === id)
-    if (idx < 0) return
-    t[idx].value = e.target.value
-    this.setState({rentIncreases: t})
+  handleRentRangeValueChange(e, idx) {
+    const t = this.state.rentRanges.slice(0)
+    t[idx].rent = e.target.value
+    this.setState({rentRanges: t})
   }
-  removeRentIncrease(id) {
-    const arr = this.state.rentIncreases
-    if (arr.length < 2) return
-    const idx = arr.findIndex(el => el.id === id)
-    if (idx < 0) return
-    const t = this.state.rentIncreases.slice(0)
+  removeRentRange(idx) {
+    const t = this.state.rentRanges.slice(0)
+    if (t.length < 2) return
     t.splice(idx, 1)
-    this.setState({rentIncreases: t})
-  }
-  calculateMaxRent() {
-    const plusTenPercent = this.state.pastRent * 1.1
-    const cpiCalc = this.state.pastRent * (1 + 0.05 + parseFloat(this.state.cpi))
-    const min = Math.min(plusTenPercent, cpiCalc)
-    return parseFloat(min).toFixed(2)
+    this.setState({rentRanges: t})
   }
   calculateRentIncreasePercentage() {
     return parseFloat((this.state.currentRent - this.state.pastRent)/this.state.pastRent * 100).toFixed(0);
   }
-  toggleHiddenDateField(id) {
-    const t = Object.assign({}, this.state.hiddenDateFields)
-    if (!t[id]) t[id] = false
-    t[id] = !t[id]
-    this.setState({ hiddenDateFields: t })
+  handleDateChange({ startDate, endDate }, idx) {
+    this.setState({ startDate, endDate });
+  }
+  handleFocusChange(focusedInput, idx) {
+    const t = this.state.rentRanges.slice(0)
+    t[idx].focusedInput = focusedInput
+    this.setState({ rentRanges: t });
   }
   
   render() {
     const { t, refund, changeRefund } = this.props
-    const maxRent = this.calculateMaxRent();
+    const maxRent = calculateMaxRent(this.state.pastRent, this.state.cpi);
     const rentIncreasePercentage = this.calculateRentIncreasePercentage();
     const updateRefund = () => {
-      const t = parseFloat(this.state.currentRent - maxRent).toFixed(2)
+      const t = calculateTotalAmountOwedToTenant(this.state.rentRanges, this.state.cpi)
       changeRefund(t)
     }
     // TODO: This is not a performant solution because it will update every render.
     // Instead, put all vars the refund relies on (currentRent, maxRent, any rent increases, etc)
     // and have the refund as a calculated value from those other values. 
     updateRefund()
-
+    const rentRanges = this.state.rentRanges
     const that = this;
-    const rentIncreases = this.state.rentIncreases.map(rent => {
+    const rentRangeList = rentRanges.map((rent, idx) => {
       return (
         <li key={rent.id}>
-          {this.state.rentIncreases.length > 1 &&
-            <DangerButton className="remove" onClick={() => that.removeRentIncrease(rent.id)}>&times;</DangerButton>
+          {idx > 1 &&
+            <DangerButton className="remove" onClick={() => that.removeRentRange(idx)}>&times;</DangerButton>
           }
           <div>
-            <h3>When was the rent increase?</h3>
-            <input style={{ display: this.state.hiddenDateFields[rent.id] ? 'none' : 'block' }} onChange={(e) => that.handleRentIncreaseDateChange(rent.id, e)} type="date"></input> 
-            <span style={{fontWeight: '300', margin: '0 5px'}}>I don't remember</span>
-            <input onChange={() => that.toggleHiddenDateField(rent.id)} type='checkbox'></input>
-            <h3>What was the new rent?</h3>
-            <input type="number" onChange={(e) => this.handleRentIncreaseValueChange(rent.id, e)}></input>
+            Rent: $<input type="number" onChange={(e) => this.handleRentRangeValueChange(e, idx)}></input>
+            <DateRangePicker
+              endDate={rentRanges[idx].endDate}
+              endDateId="endDate"
+              focusedInput={rentRanges[idx].focusedInput}
+              isOutsideRange={() => null}
+              onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+              onFocusChange={(e) => this.handleFocusChange(e, idx)}
+              startDate={rentRanges[idx].startDate}
+              startDateId="startDate"
+            />
           </div>
         </li>
       )
@@ -137,22 +148,23 @@ class Calculator extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">What is your current rent?</h5>
                 <input type="number" value={this.state.currentRent} onChange={(e) => this.handleInput('currentRent', e)}></input>
+                <br />
+                <h4>Your rent increased by {rentIncreasePercentage}%. Your maximum rent is {maxRent}. Enter your rent information below to calculate a potential refund</h4>
               </div>
             </div>
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Did your rent increase within the year (between March 15th and now)?</h5>
-                <SecondaryButton onClick={() => this.setState({showRentIncrease: true})}>Yes</SecondaryButton><SecondaryButton onClick={() => this.setState({showRentIncrease: false})}>No</SecondaryButton>
-                {this.state.showRentIncrease &&
-                  <section className="rent-increases">
-                    <ul>{rentIncreases}</ul>
-                    <SuccessButton className="add" onClick={this.addRentIncrease}>+</SuccessButton>
-                  </section>
-                }
+                <h5 className="card-title">Enter your rent history from March 15, 2019 to now.</h5>
+                <section className="rent-increases">
+                  <ul>{rentRangeList}</ul>
+                  <SuccessButton className="add" onClick={this.addRentRange}>+</SuccessButton>
+                </section>
               </div>
             </div>
             <br />
-            <h4>Your rent increased by {rentIncreasePercentage}%. Your maximum rent is {maxRent} and you should be refunded ${refund}</h4>
+            <h4>Based on the information provided, you may be owed ${refund}</h4>
+            <small>NOTE: You are only refunded money paid in excess rent after Jan 1 2020</small>
+            <br />
             <Disclaimer />
             <br />
             <br />
