@@ -121,14 +121,14 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
-            <select name="cpi-picker" onChange={(e) => this.handleInput('cpi', e)}>
+            {/* <select name="cpi-picker" onChange={(e) => this.handleInput('cpi', e)}>
               <option value="0.033" label="Select your location"></option>
               <option value="0.04" label="Oakland-Hayward-San Francisco"></option>
               <option value="0.033" label="Los Angeles-Long Beach-Anaheim"></option>
               <option value="0.022" label="San Diego-Carlsbad"></option>
               <option value="0.028" label="Riverside-San Bernardino-Ontario"></option>
               <option value="0.033" label="Other"></option>
-            </select>
+            </select> */}
             <div className="dropdown">
               <button onClick={() => {this.setState({showCpiDropdown: !this.state.showCpiDropdown})}} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {this.state.cpiSelection}
@@ -136,45 +136,45 @@ class Calculator extends React.Component {
               <div style={{display: this.state.showCpiDropdown ? 'block' : 'none'}} className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a onClick={() => {
                   this.setState({
-                    showCpiDropdown: !this.state.showCpiDropdown,
-                    cpiSelection: 'Oakland-Hayward-San Francisco',
-                    cpi: 0.04
+                      showCpiDropdown: !this.state.showCpiDropdown,
+                      cpiSelection: 'Oakland-Hayward-San Francisco',
+                      cpi: 0.04
                     })
                   }
                 } className="dropdown-item">Oakland-Hayward-San Francisco
                 </a>
                 <a onClick={() => {
                   this.setState({
-                    showCpiDropdown: !this.state.showCpiDropdown,
-                    cpiSelection: 'Los Angeles-Long Beach-Anaheim',
-                    cpi: 0.033
+                      showCpiDropdown: !this.state.showCpiDropdown,
+                      cpiSelection: 'Los Angeles-Long Beach-Anaheim',
+                      cpi: 0.033
                     })
                   }
                 } className="dropdown-item">Los Angeles-Long Beach-Anaheim
                 </a>
                 <a onClick={() => {
                   this.setState({
-                    showCpiDropdown: !this.state.showCpiDropdown,
-                    cpiSelection: 'San Diego-Carlsbad',
-                    cpi: 0.022
+                      showCpiDropdown: !this.state.showCpiDropdown,
+                      cpiSelection: 'San Diego-Carlsbad',
+                      cpi: 0.022
                     })
                   }
                 } className="dropdown-item">San Diego-Carlsbad
                 </a>
                 <a onClick={() => {
                   this.setState({
-                    showCpiDropdown: !this.state.showCpiDropdown,
-                    cpiSelection: 'Riverside-San Bernardino-Ontario',
-                    cpi: 0.028
+                      showCpiDropdown: !this.state.showCpiDropdown,
+                      cpiSelection: 'Riverside-San Bernardino-Ontario',
+                      cpi: 0.028
                     })
                   }
                 } className="dropdown-item">Riverside-San Bernardino-Ontario
                 </a>
                 <a onClick={() => {
                   this.setState({
-                    showCpiDropdown: !this.state.showCpiDropdown,
-                    cpiSelection: 'Other',
-                    cpi: 0.033
+                      showCpiDropdown: !this.state.showCpiDropdown,
+                      cpiSelection: 'Other',
+                      cpi: 0.033
                     })
                   }
                 } className="dropdown-item">Other
