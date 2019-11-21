@@ -11,7 +11,7 @@ const Header = ({ siteTitle, t }) => (
   <header>
     <SEO title="Home" />
     <Link to="/"><img src={logo}></img></Link>
-    <Link to="/flowchart">
+    <Link to="/eligibility">
       <PrimaryButton>{t('eligible')}</PrimaryButton>
     </Link>
     <Link to="/calculator">
