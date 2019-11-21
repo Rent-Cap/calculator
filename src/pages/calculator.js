@@ -129,11 +129,11 @@ class Calculator extends React.Component {
               <option value="0.028" label="Riverside-San Bernardino-Ontario"></option>
               <option value="0.033" label="Other"></option>
             </select>
-            <div class="dropdown">
-              <button onClick={() => {this.setState({showCpiDropdown: !this.state.showCpiDropdown})}} class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div className="dropdown">
+              <button onClick={() => {this.setState({showCpiDropdown: !this.state.showCpiDropdown})}} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {this.state.cpiSelection}
               </button>
-              <div style={{display: this.state.showCpiDropdown ? 'block' : 'none'}} class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div style={{display: this.state.showCpiDropdown ? 'block' : 'none'}} className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a onClick={() => {
                   this.setState({
                     showCpiDropdown: !this.state.showCpiDropdown,
@@ -141,7 +141,7 @@ class Calculator extends React.Component {
                     cpi: 0.04
                     })
                   }
-                } class="dropdown-item">Oakland-Hayward-San Francisco
+                } className="dropdown-item">Oakland-Hayward-San Francisco
                 </a>
                 <a onClick={() => {
                   this.setState({
@@ -150,7 +150,7 @@ class Calculator extends React.Component {
                     cpi: 0.033
                     })
                   }
-                } class="dropdown-item">Los Angeles-Long Beach-Anaheim
+                } className="dropdown-item">Los Angeles-Long Beach-Anaheim
                 </a>
                 <a onClick={() => {
                   this.setState({
@@ -159,7 +159,7 @@ class Calculator extends React.Component {
                     cpi: 0.022
                     })
                   }
-                } class="dropdown-item">San Diego-Carlsbad
+                } className="dropdown-item">San Diego-Carlsbad
                 </a>
                 <a onClick={() => {
                   this.setState({
@@ -168,7 +168,7 @@ class Calculator extends React.Component {
                     cpi: 0.028
                     })
                   }
-                } class="dropdown-item">Riverside-San Bernardino-Ontario
+                } className="dropdown-item">Riverside-San Bernardino-Ontario
                 </a>
                 <a onClick={() => {
                   this.setState({
@@ -177,7 +177,7 @@ class Calculator extends React.Component {
                     cpi: 0.033
                     })
                   }
-                } class="dropdown-item">Other
+                } className="dropdown-item">Other
                 </a>
               </div>
             </div>

@@ -11,20 +11,23 @@ const Header = ({ siteTitle, t }) => (
   <header>
     <SEO title="Home" />
     <Link to="/"><img src={logo}></img></Link>
-    <Link to="/flowchart">
-      <PrimaryButton>{t('eligible')}</PrimaryButton>
-    </Link>
-    <Link to="/calculator">
-      <PrimaryButton>I'm eligible (Calculator)</PrimaryButton>
-    </Link>
-    <Link to="/resources">
-      <PrimaryButton>Resources</PrimaryButton>
-    </Link>
-    <Link to="/about">
-      <PrimaryButton>About</PrimaryButton>
-    </Link>
-    <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
-    <SecondaryButton onClick={() => i18n.changeLanguage('es')}>Espanol</SecondaryButton>
+    <div className="container">
+      <Link to="/flowchart">
+        <PrimaryButton>{t('eligible')}</PrimaryButton>
+      </Link>
+      <Link to="/calculator">
+        <PrimaryButton>I'm eligible (Calculator)</PrimaryButton>
+      </Link>
+      <Link to="/resources">
+        <PrimaryButton>Resources</PrimaryButton>
+      </Link>
+      <Link to="/about">
+        <PrimaryButton>About</PrimaryButton>
+      </Link>
+    </div>
+    {/* TODO: Add spanish translation */}
+    {/* <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
+    <SecondaryButton onClick={() => i18n.changeLanguage('es')}>Espanol</SecondaryButton> */}
   </header>
 )
 
