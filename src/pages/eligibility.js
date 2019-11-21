@@ -18,22 +18,30 @@ const q5 = new Question('Is your building owned by a corporation, real estate in
 const q6 = new Question('Does your landlord live with you and is s/he currently renting out more than 2 rooms or accessory dwelling units? An accessory dwelling unit is an additional separate living space located on a property.', 5)
 const q7 = new Question('Is a portion of your rent paid for by a government agency or with a housing voucher? Affordable housing units are exempt from the Tenant Protection Act.', 6)
 const q8 = new Question('Has anyone in your building unit lived there for at least 24 months?', 1)
-const template = new Question('')
-const conclusion1 = new Question('Unfortunately, your building is neither covered by rent control nor just-cause eviction protection from the Tenant Protections Act.', 7)
-const conclusion2 = new Question('Your building is not covered by rent control from the Tenant Protection Act. Fortunately, your building is covered by the just-cause eviction protection! Click here for a list of just-cause reasons for eviction.', 7)
+const q9 = new Question(' Is your building a dormitory connected to any higher education institutions? Buildings that were constructed and maintained by a higher education institution (i.e. University) for students to occupy are exempt from the Tenant Protection Act.', 7)
+const q10 = new Question('Did your landlord live on the property prior to the start of your tenancy and does your landlord continue to reside on the property?', 7)
+// const template = new Question('', 0)
+const temp = new Question('There are multiple solutions -- This depends on flags', 17)
+const conclusion1 = new Question('Unfortunately, your building is neither covered by rent control nor just-cause eviction protection from the Tenant Protections Act.', 17)
+const conclusion2 = new Question('Your building is not covered by rent control from the Tenant Protection Act. Fortunately, your building is covered by the just-cause eviction protection! Click here for a list of just-cause reasons for eviction.', 17)
+const conclusion3 = new Question('Your building is covered by rent control from the Tenant Protection Act. However, your building is not covered by the just-cause eviction protection.', 17)
+const conclusion4 = new Question('Great news! Your building is covered by both rent control and just-cause eviction protection from the Tenant Protection Act! Click here for a list of just-cause reasons for eviction.', 17)
 
 q1.active = true
 q1.responseList = [{ value: q2, label: 'Yes'}, { value: q8, label: 'No' }]
 q2.responseList = [{ value: q3, label: 'Yes' }, { value: conclusion1, label: 'No'}]
 // NOTE: if 'no' then no just-cause eviction protection
 q3.responseList = [{ value: q4, label: 'Yes' }, { value: q4, label: 'No', flag: 'no-just' }]
-q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two'}, {label: 'Three'}, {label: 'Three or more'}]
+q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp }]
 q5.responseList = [{ label: 'Yes', value: q6 }, { value: conclusion1, label: 'No'}]
 // NOTE: If no, then no just-cause eviction protection
-q6.responseList = [{ label: 'Yes', value: q7}, { label: 'No', value: q7, flag: 'no-just'}]
-q7.responseList = [{}, {}]
+q6.responseList = [{ label: 'Yes', value: q7}, { label: 'No', value: q7, flag: 'adu'}]
+q7.responseList = [{ label: 'Yes', value: temp}, { label: 'No', value: q9 }]
 q8.responseList = [{ label: 'Yes', value: q2 }, { label: 'No', value: q2, flag: 'no-just' }]
-const questions = [q1, q2, q3, q4, q5, q6, q7, q8, conclusion1, conclusion2]
+q9.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
+q10.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
+
+const questions = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, temp, conclusion1, conclusion2, conclusion3, conclusion4]
 
 class Eligibility extends React.Component {
   constructor(props) {
@@ -41,6 +49,7 @@ class Eligibility extends React.Component {
     this.state = {
       flags: {
         'no-just': 'unknown',
+        adu: 'unknown'
       },
       questions
     }
@@ -98,8 +107,13 @@ class Eligibility extends React.Component {
     return (
       <Layout>
         <div>
-          {Object.entries(this.state.flags)}
           <ul style={{display: 'flex', flexDirection: 'column'}}>{questionList}</ul>
+          <hr />
+          <h4>flags</h4>
+          <ul>
+            <li>ADU: {this.state.flags['adu']}</li>
+            <li>no-just-cause-eviction: {this.state.flags['no-just']}</li>
+          </ul>
         </div>
       </Layout>
     )
