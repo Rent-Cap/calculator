@@ -11,7 +11,7 @@ import moment from 'moment'
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 11, 31]), focusedInput: null, id: 0}
+const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 2, 15]), focusedInput: null, id: 0}
 const emptyRentRange2 = {rent: 0, startDate: moment([2020, 0, 1]), endDate: moment([2020, 1, 1]), focusedInput: null, id: 1}
 
 class Calculator extends React.Component {
@@ -24,6 +24,8 @@ class Calculator extends React.Component {
       showSection: false,
       showRentIncrease: false,
       showLetter: false,
+      showCpiDropdown: false,
+      cpiSelection: 'Where do you live',
       rentRanges: [emptyRentRange1, emptyRentRange2]
     }
     this.handleInput = handleInput.bind(this)
@@ -107,7 +109,7 @@ class Calculator extends React.Component {
               onFocusChange={(e) => this.handleFocusChange(e, idx)}
               startDate={rentRanges[idx].startDate}
               startDateId="startDate"
-              // orientation='VERTICAL_ORIENTATION'
+              orientation='vertical'
             />
           </div>
         </li>
@@ -127,6 +129,58 @@ class Calculator extends React.Component {
               <option value="0.028" label="Riverside-San Bernardino-Ontario"></option>
               <option value="0.033" label="Other"></option>
             </select>
+            <div class="dropdown">
+              <button onClick={() => {this.setState({showCpiDropdown: !this.state.showCpiDropdown})}} class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {this.state.cpiSelection}
+              </button>
+              <div style={{display: this.state.showCpiDropdown ? 'block' : 'none'}} class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a onClick={() => {
+                  this.setState({
+                    showCpiDropdown: !this.state.showCpiDropdown,
+                    cpiSelection: 'Oakland-Hayward-San Francisco',
+                    cpi: 0.04
+                    })
+                  }
+                } class="dropdown-item">Oakland-Hayward-San Francisco
+                </a>
+                <a onClick={() => {
+                  this.setState({
+                    showCpiDropdown: !this.state.showCpiDropdown,
+                    cpiSelection: 'Los Angeles-Long Beach-Anaheim',
+                    cpi: 0.033
+                    })
+                  }
+                } class="dropdown-item">Los Angeles-Long Beach-Anaheim
+                </a>
+                <a onClick={() => {
+                  this.setState({
+                    showCpiDropdown: !this.state.showCpiDropdown,
+                    cpiSelection: 'San Diego-Carlsbad',
+                    cpi: 0.022
+                    })
+                  }
+                } class="dropdown-item">San Diego-Carlsbad
+                </a>
+                <a onClick={() => {
+                  this.setState({
+                    showCpiDropdown: !this.state.showCpiDropdown,
+                    cpiSelection: 'Riverside-San Bernardino-Ontario',
+                    cpi: 0.028
+                    })
+                  }
+                } class="dropdown-item">Riverside-San Bernardino-Ontario
+                </a>
+                <a onClick={() => {
+                  this.setState({
+                    showCpiDropdown: !this.state.showCpiDropdown,
+                    cpiSelection: 'Other',
+                    cpi: 0.033
+                    })
+                  }
+                } class="dropdown-item">Other
+                </a>
+              </div>
+            </div>
           </div>
         </div>
         <br />
@@ -137,7 +191,8 @@ class Calculator extends React.Component {
           </div>
         </div>
         <br />
-        <h4>Your maximum rent should be no greater than <strong>${maxRent} on March 15, 2020 (TODO: check this date)</strong></h4>
+        {/* TODO: Double check this date */}
+        <h4>Your maximum rent should be no greater than <strong>${maxRent} on March 15, 2020</strong></h4>
         <Disclaimer />
         <br />
         <br />
@@ -150,7 +205,7 @@ class Calculator extends React.Component {
                 <h5 className="card-title">What is your current rent?</h5>
                 <input type="number" value={this.state.currentRent} onChange={(e) => this.handleInput('currentRent', e)}></input>
                 <br />
-                <h4>Your rent increased by {rentIncreasePercentage}%. Your maximum rent is {maxRent}. Enter your rent information below to calculate a potential refund</h4>
+                <h4>Your rent increased by {rentIncreasePercentage > 0 ? rentIncreasePercentage : 0}%. Your maximum rent is {maxRent}. Enter your rent information below to calculate a potential refund</h4>
               </div>
             </div>
             <div className="card">
