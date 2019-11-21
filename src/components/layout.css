@@ -218,7 +218,7 @@ img {
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
-  margin-bottom: 1.45rem;
+  /* margin-bottom: 1.45rem; */
 }
 h1 {
   margin-left: 0;
@@ -343,6 +343,7 @@ ul {
   margin-bottom: 1.45rem;
   list-style-position: outside;
   list-style-image: none;
+  list-style-type: none;
 }
 ol {
   margin-left: 1.45rem;
@@ -615,8 +616,20 @@ pre tt:before,
 pre tt:after {
   content: "";
 }
-@media only screen and (max-width: 480px) {
+header {
+  display: flex;
+  align-items: center;
+  /* flex-wrap: wrap; */
+}
+.btn-outline-danger {
+  position: absolute;
+  left: 0;
+}
+@media only screen and (max-width: 600px) {
   html {
     font-size: 100%;
+  }
+  header {
+    flex-direction: column;
   }
 }
