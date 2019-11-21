@@ -11,8 +11,8 @@ import moment from 'moment'
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 11, 31]), focusedInput: null, id: 0, totalMonthsPaidAfterJan2020: 0}
-const emptyRentRange2 = {rent: 0, startDate: moment([2020, 0, 1]), endDate: moment([2020, 1, 1]), focusedInput: null, id: 1, totalMonthsPaidAfterJan2020: 1}
+const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 11, 31]), focusedInput: null, id: 0}
+const emptyRentRange2 = {rent: 0, startDate: moment([2020, 0, 1]), endDate: moment([2020, 1, 1]), focusedInput: null, id: 1}
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -48,9 +48,9 @@ class Calculator extends React.Component {
     const t = this.state.rentRanges.slice(0)
     t[idx].startDate = e.startDate || t[idx].startDate
     t[idx].endDate = e.endDate || t[idx].endDate
-    const janFirst2020 = moment([2020, 0, 1])
-    const diff = t[idx].endDate.diff(janFirst2020, 'months', true)
-    t[idx].totalMonthsPaidAfterJan2020 = diff > 0 ? diff : 0
+    // const janFirst2020 = moment([2020, 0, 1])
+    // const diff = t[idx].endDate.diff(janFirst2020, 'months', true)
+    // t[idx].totalMonthsPaidAfterJan2020 = diff > 0 ? diff : 0
     this.setState({rentRanges: t})
   }
   handleRentRangeValueChange(e, idx) {
@@ -107,6 +107,7 @@ class Calculator extends React.Component {
               onFocusChange={(e) => this.handleFocusChange(e, idx)}
               startDate={rentRanges[idx].startDate}
               startDateId="startDate"
+              // orientation='VERTICAL_ORIENTATION'
             />
           </div>
         </li>
@@ -136,7 +137,7 @@ class Calculator extends React.Component {
           </div>
         </div>
         <br />
-        <h4>Your maximum rent should be <strong>${maxRent}</strong></h4>
+        <h4>Your maximum rent should be no greater than <strong>${maxRent} on March 15, 2020 (TODO: check this date)</strong></h4>
         <Disclaimer />
         <br />
         <br />

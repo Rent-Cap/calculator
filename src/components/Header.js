@@ -20,6 +20,9 @@ const Header = ({ siteTitle, t }) => (
     <Link to="/resources">
       <PrimaryButton>Resources</PrimaryButton>
     </Link>
+    <Link to="/about">
+      <PrimaryButton>About</PrimaryButton>
+    </Link>
     <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
     <SecondaryButton onClick={() => i18n.changeLanguage('es')}>Espanol</SecondaryButton>
   </header>
