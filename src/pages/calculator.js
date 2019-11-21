@@ -44,6 +44,7 @@ class Calculator extends React.Component {
     r.endDate = moment(t[t.length - 1].endDate).add(1, 'months', true)
     r.id = +new Date()
     t.push(r)
+    r.rent = 0
     this.setState({rentRanges: t})
   }
   handleRentRangeDateChange(e, idx) {
