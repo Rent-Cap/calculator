@@ -165,11 +165,11 @@ class Eligibility extends React.Component {
       <Layout>
         <div>
           <ul style={{display: 'flex', flexDirection: 'column'}}>{questionList}</ul>
-          <hr />
+          {/* <hr />
           <h4>state (TODO: Hide this in prod)</h4>
           <ul>
             {flagList}
-          </ul>
+          </ul> */}
         </div>
       </Layout>
     )
