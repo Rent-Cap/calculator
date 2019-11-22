@@ -1,9 +1,11 @@
 import React from 'react'
 import GenerateLetter from '../components/GenerateLetter'
 import Layout from '../components/Layout'
+import SEO from "../components/Seo"
 
 const Resources = ({ location }) => (
   <Layout>
+    <SEO title="Resources" />
     <div>
       {location.pathname === '/resources/local-ordinances' &&
         <div>
