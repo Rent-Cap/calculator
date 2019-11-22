@@ -15,6 +15,7 @@ const q2 = new Question('Is your building at least 15 years old? This applies to
 const q3 = new Question('Do you share a kitchen or bathroom with your landlord?', 2)
 const q4 = new Question('How many units are there in your building or on the property? If you rent a room in a single-family home, click "One".', 3)
 const q5 = new Question('Is your building owned by a corporation, real estate investment trust (REIT), or LLC in which at least one member is a corporation? Not sure who owns your building? Check with your city’s planning department.', 4)
+const q5_2 = new Question('Do you rent a room in your landlord’s house/apartment or live in an ADU on your landlord’s property? An accessory dwelling unit (ADU) is an additional separate living space located on a property.', 4)
 const q6 = new Question('Does your landlord live with you and is s/he currently renting out more than 2 rooms or accessory dwelling units? An accessory dwelling unit is an additional separate living space located on a property.', 5)
 const q7 = new Question('Is a portion of your rent paid for by a government agency or with a housing voucher? Affordable housing units are exempt from the Tenant Protection Act.', 6)
 const q8 = new Question('Has anyone in your building unit lived there for at least 24 months?', 1)
@@ -28,52 +29,57 @@ const conclusion3 = new Question('Your building is covered by rent control from 
 const conclusion4 = new Question('Great news! Your building is covered by both rent control and just-cause eviction protection from the Tenant Protection Act! Click here for a list of just-cause reasons for eviction.', 17)
 
 q1.active = true
-q1.responseList = [{ value: q2, label: 'Yes'}, { value: q8, label: 'No' }]
-q2.responseList = [{ value: q3, label: 'Yes' }, { value: conclusion1, label: 'No'}]
+q1.responseList = [{ value: q2, label: 'Yes', flags: [['first-q', 'yes']]}, { value: q8, label: 'No', flags: [['first-q', 'no']] }]
+q2.responseList = [{ value: q3, label: 'Yes', flags: [['#2', 'yes']]}, { value: conclusion1, label: 'No', flags: [['#2', 'no']]}]
 // NOTE: if 'no' then no just-cause eviction protection
-q3.responseList = [{ value: q4, label: 'Yes' }, { value: q4, label: 'No', flag: 'no-just' }]
+q3.responseList = [{ value: q4, label: 'Yes' }, { value: q4, label: 'No', flags: [['no-just', 'foo']] }]
 q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp }]
-q5.responseList = [{ label: 'Yes', value: q6 }, { value: conclusion1, label: 'No'}]
+q5.responseList = [{ label: 'Yes', value: q5_2 }, { value: conclusion1, label: 'No'}]
+q5_2.responseList = [{ label: 'Yes', value: q6 }, { value: conclusion1, label: 'No'}]
 // NOTE: If no, then no just-cause eviction protection
-q6.responseList = [{ label: 'Yes', value: q7}, { label: 'No', value: q7, flag: 'adu'}]
+q6.responseList = [{ label: 'Yes', value: q7}, { label: 'No', value: q7, flags: [['adu', 'foo']]}]
 q7.responseList = [{ label: 'Yes', value: temp}, { label: 'No', value: q9 }]
-q8.responseList = [{ label: 'Yes', value: q2 }, { label: 'No', value: q2, flag: 'no-just' }]
+q8.responseList = [{ label: 'Yes', value: q2 }, { label: 'No', value: q2, flags: [['no-just', 'foo']] }]
 q9.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
 q10.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
 
-const questions = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, temp, conclusion1, conclusion2, conclusion3, conclusion4]
+const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, temp, conclusion1, conclusion2, conclusion3, conclusion4]
 
 class Eligibility extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      flags: {
-        'no-just': 'unknown',
-        adu: 'unknown'
-      },
       questions
     }
     this.handleClick = this.handleClick.bind(this)
   }
   setFlag(flag, value) {
     if (!flag) return
-    const f = Object.assign({}, this.state.flags)
-    f[flag] = value
-    this.setState({ flags: f })
+
+    const obj = {}
+    obj[flag] = value
+    this.setState(obj)
   }
   handleClick(questionIdx, responseIdx) {
     const q = this.state.questions.slice(0)
     const question = q[questionIdx]
     const response = question.responseList[responseIdx]
 
-    // reset any flags
-    question.responseList.forEach(res => {
-      this.setFlag(res.flag, 'unknown')
-    })
-
     const deactivateChildren = root => {
       if (!root) return
       root.active = false
+
+      // Reset all flags below this child
+      if (root.responseList) {
+        for(let i = 0; i < root.responseList.length; i++) {
+          const response = root.responseList[i]
+          if (response.flags) {
+            for(let i = 0; i < response.flags.length; i++) {
+              this.setFlag(response.flags[i][0], 'unknown')
+            }
+          }
+        }
+      }
 
       for(let i = 0; i < root.responseList.length; i++) {
         deactivateChildren(root.responseList[i].value)
@@ -84,8 +90,12 @@ class Eligibility extends React.Component {
       deactivateChildren(question.responseList[i].value)
     }
 
-    // If the question has a special flag e.g. eviction just cause clauses set it true
-    this.setFlag(response.flag, 'yes')
+    
+    if (response.flags && response.flags.length > 0) {
+      for(let i = 0; i < response.flags.length; i++) {
+        this.setFlag(response.flags[i][0], response.flags[i][1])
+      }
+    }
 
     // Show the response provided
     response.value.active = true
@@ -104,15 +114,23 @@ class Eligibility extends React.Component {
         </li>
       )
     })
+    const flagList = Object.keys(this.state).map(flagKey => {
+      return (
+        <li key={flagKey}>
+          {flagKey !== 'questions' &&
+            <span>{flagKey}: {this.state[flagKey]}</span>
+          }
+        </li>
+      )
+    })
     return (
       <Layout>
         <div>
           <ul style={{display: 'flex', flexDirection: 'column'}}>{questionList}</ul>
           <hr />
-          <h4>flags</h4>
+          <h4>state (TODO: Hide this in prod)</h4>
           <ul>
-            <li>ADU: {this.state.flags['adu']}</li>
-            <li>no-just-cause-eviction: {this.state.flags['no-just']}</li>
+            {flagList}
           </ul>
         </div>
       </Layout>
