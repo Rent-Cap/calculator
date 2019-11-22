@@ -53,3 +53,36 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
   }
   return result > 0 ? parseFloat(result).toFixed(2) : 0
 }
+
+export const checkFlags = (arr, flags) => {
+  let result = ''
+  const mapping = {
+    'and': ' && ',
+    'or': ' || ',
+    'not': '!'
+  }
+  for(let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'object') {
+      for(let j = 0; j < arr[i].length; j++) {
+        const flagVal = flags[arr[i][j]]
+        const mappingVal = mapping[arr[i][j]]
+        if (typeof flagVal !== 'undefined') {
+          let term
+          if (flagVal === 'yes') {
+            term = true
+          } else if (flagVal === 'no') {
+            term = false
+          }
+          if (typeof term !== 'undefined') result += term
+        } else if (typeof mappingVal !== 'undefined') {
+          result += mappingVal
+        } else {
+          throw new Error('Unknown flag or mapping')
+        }
+      }
+    } else {
+      result += mapping[arr[i]]
+    }
+  }
+  return eval(result)
+}

@@ -1,4 +1,4 @@
-import { calculateTotalAmountOwedToTenant, determineRentOnDateFromRentRanges, determineMaxRentFromRentRanges } from '../Helpers'
+import { calculateTotalAmountOwedToTenant, determineRentOnDateFromRentRanges, determineMaxRentFromRentRanges, checkFlags } from '../Helpers'
 import moment from 'moment'
 
 // Move In date: January 1st, 2019
@@ -70,6 +70,18 @@ describe('determineRentOnDateFromRentRanges', () => {
   })
   it('Throws error if no target', () => {
     expect(() => determineRentOnDateFromRentRanges(null, [])).toThrow()
+  })
+})
+
+describe('checkFlags', () => {
+  it('uses flags to eval a result', () => {
+    const flags = {
+      'voucher-q': 'yes',
+      'first-q': 'no'
+    }
+    const arr = [['voucher-q', 'or', 'not','first-q']]
+    const result = checkFlags(arr, flags)
+    expect(result).toBe(true)
   })
 })
 
