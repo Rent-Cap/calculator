@@ -1,4 +1,4 @@
-import { calculateTotalAmountOwedToTenant } from '../Helpers'
+import { calculateTotalAmountOwedToTenant, checkFlags } from '../Helpers'
 import moment from 'moment'
 
 describe('calculateAmountOwedToTenant', () => {
@@ -12,4 +12,16 @@ describe('calculateAmountOwedToTenant', () => {
     expect(result).toBe("17.00")
   })
   // TODO: Write more test cases!
+})
+
+describe('checkFlags', () => {
+  it('uses flags to eval a result', () => {
+    const flags = {
+      'voucher-q': 'yes',
+      'first-q': 'no'
+    }
+    const arr = [['voucher-q', 'or', 'not','first-q']]
+    const result = checkFlags(arr, flags)
+    expect(result).toBe(true)
+  })
 })
