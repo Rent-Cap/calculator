@@ -8,6 +8,7 @@ function Question(text, order) {
   this.responseList = []
   this.active = false
   this.order = order || 0
+  this.variableText = false
 }
 
 // const template = new Question('', 0)
@@ -33,19 +34,21 @@ const conclusion3 = new Question('Your building is covered by rent control from 
 const conclusion4 = new Question('Great news! Your building is covered by both rent control and just-cause eviction protection from the Tenant Protection Act! Click here for a list of just-cause reasons for eviction.', 17)
 
 q1.active = true
+temp.variableText = true
+
 q1.responseList = [{ value: q2, label: 'Yes', flags: [['first-q', 'yes']]}, { value: q8, label: 'No', flags: [['first-q', 'no']] }]
 q2.responseList = [{ value: q3, label: 'Yes', flags: [['#2', 'yes']]}, { value: conclusion1, label: 'No', flags: [['#2', 'no']]}]
 // NOTE: if 'no' then no just-cause eviction protection
 q3.responseList = [{ value: q4, label: 'Yes', flags: [['kitchen-q', 'no']] }, { value: q4, label: 'No', flags: [['kitchen-q', 'no']] }]
-q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp }]
+q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp, flags: [['three-q', 'yes']] }]
 q5.responseList = [{ label: 'Yes', value: q5_2 }, { value: conclusion1, label: 'No'}]
 q5_2.responseList = [{ label: 'Yes', value: q6, flags:[['property-q', 'yes']] }, { value: conclusion1, label: 'No', flags:[['property-q', 'no']] }]
 // NOTE: If no, then no just-cause eviction protection
 q6.responseList = [{ label: 'Yes', value: q7, flags: [['adu-q', 'yes']] }, { label: 'No', value: q7, flags: [['adu-q', 'no']] }]
 q7.responseList = [{ label: 'Yes', value: temp, flags: [['voucher-q', 'yes']] }, { label: 'No', value: q9, flags: [['voucher-q', 'no']] }]
 q8.responseList = [{ label: 'Yes', value: q2 }, { label: 'No', value: q2, flags: [['no-just', 'yes']] }]
-q9.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
-q10.responseList = [{ label: 'Yes', value: temp }, { label: 'No', value: temp }]
+q9.responseList = [{ label: 'Yes', value: temp, flags: [['dorm-q', 'yes']] }, { label: 'No', value: temp, flags: [['dorm-q', 'no']] }]
+q10.responseList = [{ label: 'Yes', value: temp, flags: [['landlord-q', 'yes']] }, { label: 'No', value: temp, flags: [['landlord-q', 'no']] }]
 
 // NOTE: ALWAYS keep temp in the last index
 const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, conclusion1, conclusion2, conclusion3, conclusion4, temp]
@@ -87,14 +90,67 @@ class Eligibility extends React.Component {
           flags[key] = this.state[key]
         }
       })
+      // Voucher Q Yes #1
       if (checkFlags([['voucher-q', 'and', 'not', 'first-q', 'and', 'not', '#2'], 'or', ['voucher-q', 'and', 'kitchen-q'], 'or', ['voucher-q', 'and', 'not', 'adu-q']], flags)) {
-        // red
+        console.log('red')
         q[q.length - 1].text = conclusion1.text
       }
+      // Voucher Q Yes #2
       if (checkFlags([['voucher-q', 'and', 'first-q', 'or', '#2'], 'and', ['not', 'property-q', 'and', 'kitchen-q'], 'or', ['not', 'adu-q']], flags)) {
-        // blue
+        console.log('blue')
         q[q.length - 1].text = conclusion2.text
       }
+      // Dorm Q Yes #1
+      if (checkFlags([['dorm-q', 'and', 'not', 'first-q', 'and', 'not', '#2'], 'or', ['dorm-q', 'and', 'kitchen-q'], 'or', ['dorm-q', 'and', 'not', 'adu-q']], flags)) {
+        console.log('red')
+        q[q.length - 1].text = conclusion1.text
+      }
+      // Dorm Q Yes #2
+      if (checkFlags([['dorm-q'], 'and', ['first-q', 'or', '#2'], 'and', ['not', 'property-q', 'or', 'not', 'adu-q']], flags)) {
+        console.log('blue')
+        q[q.length - 1].text = conclusion2.text
+      }
+      // Dorm Q No #1
+      if (checkFlags([['not', 'dorm-q', 'and', 'not', 'first-q', 'and', 'not', '#2'], 'or', ['not', 'dorm-q', 'and', 'kitchen-q'], 'or', ['not', 'dorm-q', 'and', 'not', 'adu-q']], flags)) {
+        console.log('yellow')
+        q[q.length - 1].text = conclusion3.text
+      }
+      // Dorm Q No #2
+      if (checkFlags([['not', 'dorm-q', 'and', 'first-q', 'or', '#2'], 'and', ['not', 'dorm-q', 'and', 'not', 'property-q'], 'or', ['not', 'dorm-q', 'and', 'not', 'adu-q']], flags)) {
+        console.log('green')
+        q[q.length - 1].text = conclusion4.text
+      }
+      // Landlord Q Yes #1
+      if (checkFlags([['landlord-q'], 'and', ['first-q', 'or', '#2']], flags)) {
+        console.log('blue')
+        q[q.length - 1].text = conclusion2.text
+      }
+      // Landlord Q Yes #2
+      if (checkFlags([['landlord-q'], 'and', ['not', 'first-q', 'and', '#2']], flags)) {
+        console.log('red')
+        q[q.length - 1].text = conclusion1.text
+      }
+      // Landlord Q No #1
+      if (checkFlags([['not', 'landlord-q'], 'and', ['first-q', 'or', '#2']], flags)) {
+        console.log('green')
+        q[q.length - 1].text = conclusion4.text
+      }
+      // Landlord Q No #2
+      if (checkFlags([['not', 'landlord-q'], 'and', ['not', 'first-q', 'and', '#2']], flags)) {
+        console.log('yellow')
+        q[q.length - 1].text = conclusion3.text
+      }
+      // Three or More #1
+      if (checkFlags([['first-q', 'or', '#2']], flags)) {
+        console.log('green')
+        q[q.length - 1].text = conclusion4.text
+      }
+      // Three or More #2
+      if (checkFlags([['not', 'first-q', 'and', '#2']], flags)) {
+        console.log('yellow')
+        q[q.length - 1].text = conclusion3.text
+      }
+
       this.setState({ questions: q })
     }
     const deactivateChildren = root => {
@@ -126,7 +182,7 @@ class Eligibility extends React.Component {
     
     if (response.flags && response.flags.length > 0) {
       for(let i = 0; i < response.flags.length; i++) {
-        const callback = response.value.text === 'dependsOnState' ? setActiveFromFlags : null
+        const callback = response.value.variableText ? setActiveFromFlags : null
         this.setFlag(response.flags[i][0], response.flags[i][1], callback)
       }
     }
@@ -152,15 +208,15 @@ class Eligibility extends React.Component {
         </li>
       )
     })
-    const flagList = Object.keys(this.state).map(flagKey => {
-      return (
-        <li key={flagKey}>
-          {flagKey !== 'questions' &&
-            <span>{flagKey}: {this.state[flagKey]}</span>
-          }
-        </li>
-      )
-    })
+    // const flagList = Object.keys(this.state).map(flagKey => {
+    //   return (
+    //     <li key={flagKey}>
+    //       {flagKey !== 'questions' &&
+    //         <span>{flagKey}: {this.state[flagKey]}</span>
+    //       }
+    //     </li>
+    //   )
+    // })
     return (
       <Layout>
         <div>

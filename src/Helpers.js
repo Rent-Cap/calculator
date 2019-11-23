@@ -63,6 +63,7 @@ export const checkFlags = (arr, flags) => {
   }
   for(let i = 0; i < arr.length; i++) {
     if (typeof arr[i] === 'object') {
+      result += '('
       for(let j = 0; j < arr[i].length; j++) {
         const flagVal = flags[arr[i][j]]
         const mappingVal = mapping[arr[i][j]]
@@ -73,7 +74,11 @@ export const checkFlags = (arr, flags) => {
           } else if (flagVal === 'no') {
             term = false
           }
-          if (typeof term !== 'undefined') result += term
+          if (typeof term !== 'undefined') {
+            result += term
+          } else {
+            return false
+          }
         } else if (typeof mappingVal !== 'undefined') {
           result += mappingVal
         } else {
@@ -81,8 +86,10 @@ export const checkFlags = (arr, flags) => {
         }
       }
     } else {
+      result += ')'
       result += mapping[arr[i]]
     }
   }
+  result += ')'
   return eval(result)
 }
