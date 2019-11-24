@@ -106,7 +106,7 @@ class Eligibility extends React.Component {
         case 'dorm-no':
           // yellow: No (+ (No to First Q AND No to #2) OR (Yes to Kitchen Q) OR (No to ADU Q))
           // green: No (+ (Yes to First Q OR #2) AND ((No to Property Q) OR (No to ADU Q))):
-          logic = ['', '', ['(not first-q and not #2) or (kitchen-q) or (not adu-q))'], ['(first-q or #2) and ((not property-q) or (not adu-q))']]
+          logic = ['', '', ['(not first-q and not #2) or (kitchen-q) or (not adu-q)'], ['(first-q or #2) and ((not property-q) or (not adu-q))']]
           break
         case 'landlord-yes':
           // blue: Yes (+ Yes to First Q OR #2):
