@@ -79,9 +79,19 @@ describe('checkFlags', () => {
       'voucher-q': 'yes',
       'first-q': 'no'
     }
-    const arr = [['voucher-q', 'or', 'not','first-q'], 'and', ['voucher-q', 'or', 'first-q']]
+    const arr = ['voucher-q or first-q']
     const result = checkFlags(arr, flags)
     expect(result).toBe(true)
+  })
+  it('handles unknowns', () => {
+    const flags = {
+      'voucher-q': 'yes',
+      'first-q': 'no',
+      'foo': 'unknown'
+    }
+    const arr = ['voucher-q or foo']
+    const result = checkFlags(arr, flags)
+    expect(result).toBe(false)
   })
 })
 
