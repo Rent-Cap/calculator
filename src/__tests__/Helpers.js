@@ -89,7 +89,7 @@ describe('checkFlags', () => {
       'first-q': 'no',
       'foo': 'unknown'
     }
-    const arr = ['voucher-q or foo']
+    const arr = ['voucher-q or foo and (first-q or voucher-q)']
     const result = checkFlags(arr, flags)
     expect(result).toBe(false)
   })
