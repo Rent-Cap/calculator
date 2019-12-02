@@ -1,14 +1,18 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { checkFlags } from '../Helpers'
+
+let QUESTION_ID = 0
 function Question(text, order) {
   // https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
-  this.id = new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)
+  // this.id = new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)
+  this.id = QUESTION_ID
   this.text = text
   this.responseList = []
   this.active = false
   this.order = order || 0
   this.variableText = false
+  QUESTION_ID++
 }
 
 // const template = new Question('', 0)
