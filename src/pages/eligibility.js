@@ -39,7 +39,7 @@ temp.variableText = true
 q1.responseList = [{ value: q2, label: 'Yes', flags: [['first-q', 'yes']]}, { value: q8, label: 'No', flags: [['first-q', 'no']] }]
 q2.responseList = [{ value: q3, label: 'Yes', flags: [['#2', 'yes']]}, { value: conclusion1, label: 'No', flags: [['#2', 'no']]}]
 // NOTE: if 'no' then no just-cause eviction protection
-q3.responseList = [{ value: q4, label: 'Yes', flags: [['kitchen-q', 'no']] }, { value: q4, label: 'No', flags: [['kitchen-q', 'no']] }]
+q3.responseList = [{ value: q4, label: 'Yes', flags: [['kitchen-q', 'yes']] }, { value: q4, label: 'No', flags: [['kitchen-q', 'no']] }]
 q4.responseList = [{ value: q5,label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp, flowResult: 'three' }]
 q5.responseList = [{ label: 'Yes', value: q5_2 }, { value: conclusion1, label: 'No'}]
 q5_2.responseList = [{ label: 'Yes', value: q6, flags:[['property-q', 'yes']] }, { value: conclusion1, label: 'No', flags:[['property-q', 'no']] }]
@@ -96,44 +96,48 @@ class Eligibility extends React.Component {
         case 'voucher-yes':
           // red: Yes (+ (No to First Q AND No to #2) OR (Yes to Kitchen Q) OR (No to ADU Q)): 
           // blue: Yes (+ (Yes to First Q OR #2) AND ((No to Property Q) OR (No to ADU Q))): 
-          logic = [['(not first-q and not #2) or (kitchen-q) or (not adu-q)'], ['(first-q or #2) and ((not property-q or not adu-q))']]
+          logic = ['(not first-q and not #2) or (kitchen-q) or (not adu-q)', '(first-q or #2) and ((not property-q or not adu-q))']
           break
         case 'dorm-yes':
             // red: Yes (+ (No to First Q AND No to #2) OR (Yes to Kitchen Q) OR (No to ADU Q)): 
             // blue: Yes (+ (Yes to First Q OR #2) AND ((No to Property Q) OR (No to ADU Q)))
-            logic = [['(not first-q and not #2) or (kitchen-q) or (not adu-q)'], ['(first-q or #2) and ((not property-q) or (not adu-q))']]
+            logic = ['(not first-q and not #2) or (kitchen-q) or (not adu-q)', '(first-q or #2) and ((not property-q) or (not adu-q))']
           break
         case 'dorm-no':
           // yellow: No (+ (No to First Q AND No to #2) OR (Yes to Kitchen Q) OR (No to ADU Q))
           // green: No (+ (Yes to First Q OR #2) AND ((No to Property Q) OR (No to ADU Q))):
-          logic = ['', '', ['(not first-q and not #2) or (kitchen-q) or (not adu-q)'], ['(first-q or #2) and ((not property-q) or (not adu-q))']]
+          logic = ['', '', '(not first-q and not #2) or (kitchen-q) or (not adu-q)', '(first-q or #2) and ((not property-q) or (not adu-q))']
           break
         case 'landlord-yes':
           // blue: Yes (+ Yes to First Q OR #2):
           // red: Yes (+ No to First Q AND #2):
-          logic = [['first-q or #2'], ['not first-q and #2']]
+          logic = ['first-q or #2', 'not first-q and #2']
           break
         case 'landlord-no':
           // yellow: No (+ No to First Q AND #2)
           // green: No (+ Yes to First Q OR #2)
-          logic = ['', '', ['not first-q and #2'], ['first-q or #2']]
+          logic = ['', '', 'not first-q and #2', 'first-q or #2']
           break
         case 'three':
           // yellow: (+ No to First Q AND #2)
           // green: (+ Yes to First Q OR #2)
           // WARNING: Ambiguity at not first-q AND #2
-          logic = ['', '', ['not first-q and #2'], ['first-q or #2']]
+          logic = ['', '', 'not first-q and #2', 'first-q or #2']
           break
         default:
           throw new Error('Unknown flow result')
       }
+      let setText = false
       for(let i = 0; i < logic.length; i++) {
         if (checkFlags(logic[i], flags)) {
           console.log('setting text to:', conclusionTexts[i])
+          setText = true
           q[q.length - 1].text = conclusionTexts[i]
         }
       }
-
+      if (!setText) {
+        console.error('Did not set a conclusion result. Check logic', flags)
+      }
       this.setState({ questions: q })
     }
     const deactivateChildren = root => {
@@ -204,10 +208,10 @@ class Eligibility extends React.Component {
         <div>
           <ul style={{display: 'flex', flexDirection: 'column'}}>{questionList}</ul>
           <hr />
-          <h4>state (TODO: Hide this in prod)</h4>
+          {/* <h4>state (TODO: Hide this in prod)</h4>
           <ul>
             {flagList}
-          </ul>
+          </ul> */}
         </div>
       </Layout>
     )
