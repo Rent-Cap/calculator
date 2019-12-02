@@ -54,42 +54,38 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
   return result > 0 ? parseFloat(result).toFixed(2) : 0
 }
 
-export const checkFlags = (arr, flags) => {
-  let result = ''
-  const mapping = {
-    'and': ' && ',
-    'or': ' || ',
+export const checkFlags = (str, flags) => {
+  if (!str) return false
+  const logicalOperators = {
+    'and': '&&',
+    'or': '||',
     'not': '!'
   }
-  for(let i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === 'object') {
-      result += '('
-      for(let j = 0; j < arr[i].length; j++) {
-        const flagVal = flags[arr[i][j]]
-        const mappingVal = mapping[arr[i][j]]
-        if (typeof flagVal !== 'undefined') {
-          let term
-          if (flagVal === 'yes') {
-            term = true
-          } else if (flagVal === 'no') {
-            term = false
-          }
-          if (typeof term !== 'undefined') {
-            result += term
-          } else {
-            return false
-          }
-        } else if (typeof mappingVal !== 'undefined') {
-          result += mappingVal
-        } else {
-          throw new Error('Unknown flag or mapping')
-        }
-      }
+  const mapping = Object.assign(logicalOperators, flags)
+  let i = 0
+  // lazy way of forcing an eval at the end without checking for end of string
+  str += ' '
+  let result = ''
+  let term = ''
+  while (i < str.length) {
+    const token = str[i]
+    if (token !== ' ' && token !== '(' && token !== ')') {
+      term += token
     } else {
-      result += ')'
-      result += mapping[arr[i]]
+      let op = mapping[term]
+      if (op === 'yes') op = true
+      if (op === 'no') op = false
+      if (op === 'unknown') {
+        console.log('Unknown flag, breaking out of function')
+        return false
+      }
+      if (typeof op !== 'undefined') result += op
+      result += token
+      term = ''
     }
+    i++
   }
-  result += ')'
+  console.log('result', result)
   return eval(result)
+
 }
