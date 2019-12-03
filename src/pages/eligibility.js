@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { checkFlags } from '../Helpers'
+import { navigate } from '@reach/router'
 
 let QUESTION_ID = 0
 function Question(text, order) {
@@ -60,6 +61,20 @@ const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, conclusion1, c
 // red, blue, yellow, green
 const conclusionTexts = [conclusion1.text, conclusion2.text, conclusion3.text, conclusion4.text]
 
+function queryToArray(query) {
+  const result = [];
+  const pairs = query.split('&')
+  for (let i = 0; i < pairs.length; i++) {
+      if(!pairs[i])
+          continue;
+      let pair = pairs[i].split('=');
+      const key = decodeURIComponent(pair[0])
+      const value = decodeURIComponent(pair[1])
+      result.push([key, value])
+   }
+   return result;
+}
+
 class Eligibility extends React.Component {
   constructor(props) {
     super(props)
@@ -68,6 +83,7 @@ class Eligibility extends React.Component {
       questions
     }
     this.handleClick = this.handleClick.bind(this)
+    this.setStateFromQuery = this.setStateFromQuery.bind(this)
   }
   setFlag(flag, value) {
     if (!flag) return
@@ -76,14 +92,9 @@ class Eligibility extends React.Component {
     obj[flag] = value
     this.setState(obj)
   }
-
-  handleClick(questionIdx, responseIdx) {
-    const q = this.state.questions.slice(0)
-    const question = q[questionIdx]
-    const response = question.responseList[responseIdx]
-
-    question.responseList.forEach(r => r.active = false)
-    response.active = true
+  setStateFromQuery(init = false) {
+    const search = this.props.location.search.substring(1);
+    const query = search ? queryToArray(search) : []
 
     const setActiveFromFlags = flowResult => {
       const q = this.state.questions.slice(0)
@@ -165,20 +176,64 @@ class Eligibility extends React.Component {
         deactivateChildren(root.responseList[i].value)
       }
     }
-    // Hide all responses
-    for(let i = 0; i < question.responseList.length; i++) {
-      deactivateChildren(question.responseList[i].value)
-    }
+    for(let i = 0; i < query.length; i++) {
+      const term = query[i]
+      const questionIdx = questions.findIndex(q => {
+        return q.id == term[0]
+      })
+      const question = questions[questionIdx]
+      question.responseList.forEach(r => r.active = false)
+      const responseIdx = question.responseList.findIndex(r => r.label == term[1])
 
-    if (response.flags && response.flags.length > 0) {
-      for(let i = 0; i < response.flags.length; i++) {
-        this.setFlag(response.flags[i][0], response.flags[i][1])
+      // Hide all responses
+      for(let i = 0; i < question.responseList.length; i++) {
+        deactivateChildren(question.responseList[i].value)
       }
-    }
-    if (response.value.variableText) setActiveFromFlags(response.flowResult)
 
-    response.value.active = true
+      const response = questions[questionIdx].responseList[responseIdx]
+      if (response.flags && response.flags.length > 0) {
+        for(let i = 0; i < response.flags.length; i++) {
+          this.setFlag(response.flags[i][0], response.flags[i][1])
+        }
+      }
+
+      // TODO: This doesn't work on load if it is already showing variable text
+      if (response.value.variableText && !init) setActiveFromFlags(response.flowResult)
+
+      response.active = true
+      response.value.active = true
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.setStateFromQuery()
+    }
+  }
+
+  handleClick(questionIdx, responseIdx) {    
+    const q = this.state.questions.slice(0)
+    const question = q[questionIdx]
+    const response = question.responseList[responseIdx]
+    const search = this.props.location.search.substring(1);
+    let query = queryToArray(search)
+
+    // if already exists in the array, change the value, otherwise push new value
+    // NOTE: This is intentionally a double equals (==)
+    const queryQuestionIdx = query.findIndex(el => el[0] == questionIdx)
+    if (queryQuestionIdx >= 0) {
+      // On change we need to chop off the rest of the query string
+      query[queryQuestionIdx][1] = response.label
+      query = query.slice(0, queryQuestionIdx + 1)
+    } else {
+      query.push([questionIdx, response.label])
+    }
+    const queryString = query.map(a => a[0] + '=' + a[1]).join('&');
+    navigate(`?${queryString}`)
     this.setState({ questions: q })
+  }
+  componentDidMount() {
+    // decode query params to determine initial flowchart state
+    this.setStateFromQuery(true)
   }
   render() {
     const questionList = this.state.questions.map((question, idx) => {
