@@ -96,8 +96,6 @@ export const checkFlags = (str, flags) => {
 
 let QUESTION_ID = 0
 function Question(text, order) {
-  // https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
-  // this.id = new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)
   this.id = QUESTION_ID
   this.text = text
   this.responseList = []
@@ -147,11 +145,13 @@ q8.responseList = [{ label: 'Yes', value: q2 }, { label: 'No', value: q2 }]
 q9.responseList = [{ label: 'Yes', value: temp, flowResult: 'dorm-yes' }, { label: 'No', value: temp, flowResult: 'dorm-no' }]
 q10.responseList = [{ label: 'Yes', value: temp, flowResult: 'landlord-yes' }, { label: 'No', value: temp, flowResult: 'landlord-no' }]
 
+conclusion3.responseList = [{label: 'Calculate my Rent Cap', isLink: true}]
+conclusion4.responseList = [{label: 'Calculate my Rent Cap', isLink: true}]
 // NOTE: ALWAYS keep temp in the last index
 export const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, conclusion1, conclusion2, conclusion3, conclusion4, temp]
 
 // red, blue, yellow, green
-const conclusionTexts = [conclusion1.text, conclusion2.text, conclusion3.text, conclusion4.text]
+const conclusions = [conclusion1, conclusion2, conclusion3, conclusion4]
 
 export function queryToArray(query) {
   const result = [];
@@ -210,7 +210,7 @@ function getFlowResultFromQueryArray(query = []) {
 }
 
 // Use flag state to determine conclusion
-function getConclusionTextFromQuery(query = []) {
+function getConclusionFromQuery(query = []) {
   if (query.length === 0) return ''
   const flowResult = getFlowResultFromQueryArray(query)
   if (!flowResult) return ''
@@ -253,7 +253,7 @@ function getConclusionTextFromQuery(query = []) {
   }
   for(let i = 0; i < logic.length; i++) {
     if (checkFlags(logic[i], flags)) {
-      return conclusionTexts[i]
+      return conclusions[i]
     }
   }
   console.error('Did not return conclusion text properly from flags', flags)
@@ -311,8 +311,8 @@ export function getQuestionStateFromQuery(query = '') {
     const response = questionsCopy[questionIdx].responseList[responseIdx]
     // conclusion result
     if (response.value.variableText) {
-      const conclusionText = getConclusionTextFromQuery(queryArray)
-      if (conclusionText) response.value.text = conclusionText
+      const conclusion = getConclusionFromQuery(queryArray)
+      if (conclusion) response.value = conclusion
     }
 
     response.active = true

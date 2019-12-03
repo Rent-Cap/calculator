@@ -2,8 +2,9 @@ import React from 'react'
 import Layout from '../components/Layout'
 import { getQuestionStateFromQuery, queryToArray, questions } from '../Helpers'
 import { navigate } from '@reach/router'
-import { SecondaryButton } from '../components/Buttons'
+import { SecondaryButton, PrimaryButton } from '../components/Buttons'
 import './eligibility.css'
+import { Link } from 'gatsby'
 
 class Eligibility extends React.Component {
   constructor(props) {
@@ -55,11 +56,16 @@ class Eligibility extends React.Component {
     const questionList = this.state.questions.map((question, idx) => {
       const responseList = question.responseList.map(((response, idx2) => (
         <li key={idx2}>
-          <SecondaryButton onClick={() => this.handleClick(idx, idx2)}>
-            <span className={`${response.active ? 'active ' : ''}choice`}>
-              {response.label}
-            </span>
-          </SecondaryButton>
+          {/* TODO: Investigate why this logic seems to be backwards */}
+          {!response.isLink ?
+            <SecondaryButton onClick={() => this.handleClick(idx, idx2)}>
+              <span className={`${response.active ? 'active ' : ''}choice`}>
+                {response.label}
+              </span>
+            </SecondaryButton>
+            :
+            <Link to="/calculator"><PrimaryButton>{response.label}</PrimaryButton></Link>
+          }
         </li>
       )))
       return (
@@ -78,26 +84,11 @@ class Eligibility extends React.Component {
         </li>
       )
     })
-    const flagList = Object.keys(this.state).map(flagKey => {
-      return (
-        <li key={flagKey}>
-          {flagKey !== 'questions' &&
-            <span>{flagKey}: {this.state[flagKey]}</span>
-          }
-        </li>
-      )
-    })
     return (
       <Layout>
         <h1>Are you eligible?</h1>
         <div className="eligibility-container">
-          {/* <div className="card-body"> */}
           <ul className="question-list">{questionList}</ul>
-          {/* </div> */}
-          {/* <h4>state (TODO: Hide this in prod)</h4>
-          <ul>
-            {flagList}
-          </ul> */}
         </div>
       </Layout>
     )
