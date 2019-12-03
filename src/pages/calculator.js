@@ -227,7 +227,7 @@ class Calculator extends React.Component {
             <Disclaimer />
             <br />
             <br />
-            <PrimaryButton onClick={() => this.setState({showLetter: true})}>Generate a letter to your landlord</PrimaryButton>
+            {/* <PrimaryButton onClick={() => this.setState({showLetter: true})}>Generate a letter to your landlord</PrimaryButton> */}
           </section>
         }
         {this.state.showLetter &&

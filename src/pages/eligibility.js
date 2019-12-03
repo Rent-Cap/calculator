@@ -1,14 +1,21 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { checkFlags } from '../Helpers'
+import { navigate } from '@reach/router'
+import { SecondaryButton } from '../components/Buttons'
+import './eligibility.css'
+
+let QUESTION_ID = 0
 function Question(text, order) {
   // https://stackoverflow.com/questions/8012002/create-a-unique-number-with-javascript-time
-  this.id = new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)
+  // this.id = new Date().valueOf().toString(36) + Math.random().toString(36).substr(2)
+  this.id = QUESTION_ID
   this.text = text
   this.responseList = []
   this.active = false
   this.order = order || 0
   this.variableText = false
+  QUESTION_ID++
 }
 
 // const template = new Question('', 0)
@@ -23,7 +30,7 @@ const q7 = new Question('Is a portion of your rent paid for by a government agen
 const q8 = new Question('Has anyone in your building unit lived there for at least 24 months?', 1)
 const q9 = new Question(' Is your building a dormitory connected to any higher education institutions? Buildings that were constructed and maintained by a higher education institution (i.e. University) for students to occupy are exempt from the Tenant Protection Act.', 7)
 const q10 = new Question('Did your landlord live on the property prior to the start of your tenancy and does your landlord continue to reside on the property?', 7)
-const temp = new Question('dependsOnState', 17)
+const temp = new Question('Sorry, encountered an error: Please send current URL to c4sf rentcap slack group for fix', 17)
 // red
 const conclusion1 = new Question('Unfortunately, your building is neither covered by rent control nor just-cause eviction protection from the Tenant Protections Act.', 17)
 // blue
@@ -34,6 +41,7 @@ const conclusion3 = new Question('Your building is covered by rent control from 
 const conclusion4 = new Question('Great news! Your building is covered by both rent control and just-cause eviction protection from the Tenant Protection Act! Click here for a list of just-cause reasons for eviction.', 17)
 
 q1.active = true
+q1.focused = true
 temp.variableText = true
 
 q1.responseList = [{ value: q2, label: 'Yes', flags: [['first-q', 'yes']]}, { value: q8, label: 'No', flags: [['first-q', 'no']] }]
@@ -56,6 +64,20 @@ const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, conclusion1, c
 // red, blue, yellow, green
 const conclusionTexts = [conclusion1.text, conclusion2.text, conclusion3.text, conclusion4.text]
 
+function queryToArray(query) {
+  const result = [];
+  const pairs = query.split('&')
+  for (let i = 0; i < pairs.length; i++) {
+      if(!pairs[i])
+          continue;
+      let pair = pairs[i].split('=');
+      const key = decodeURIComponent(pair[0])
+      const value = decodeURIComponent(pair[1])
+      result.push([key, value])
+   }
+   return result;
+}
+
 class Eligibility extends React.Component {
   constructor(props) {
     super(props)
@@ -64,6 +86,7 @@ class Eligibility extends React.Component {
       questions
     }
     this.handleClick = this.handleClick.bind(this)
+    this.setStateFromQuery = this.setStateFromQuery.bind(this)
   }
   setFlag(flag, value) {
     if (!flag) return
@@ -72,15 +95,11 @@ class Eligibility extends React.Component {
     obj[flag] = value
     this.setState(obj)
   }
+  setStateFromQuery(init = false) {
+    const search = this.props.location.search.substring(1);
+    const query = search ? queryToArray(search) : []
 
-  handleClick(questionIdx, responseIdx) {
-    const q = this.state.questions.slice(0)
-    const question = q[questionIdx]
-    const response = question.responseList[responseIdx]
-
-    question.responseList.forEach(r => r.active = false)
-    response.active = true
-
+    // TODO: Move this logic to helpers
     const setActiveFromFlags = flowResult => {
       const q = this.state.questions.slice(0)
       const flags = {}
@@ -89,8 +108,8 @@ class Eligibility extends React.Component {
           flags[key] = this.state[key]
         }
       })
-      console.log('flowResult', flowResult)
-      // red, blue, yellow, green
+
+      // logic = [red, blue, yellow, green] from Carmen's doc
       let logic = []
       switch(flowResult) {
         case 'voucher-yes':
@@ -130,7 +149,7 @@ class Eligibility extends React.Component {
       let setText = false
       for(let i = 0; i < logic.length; i++) {
         if (checkFlags(logic[i], flags)) {
-          console.log('setting text to:', conclusionTexts[i])
+          // console.log('setting text to:', conclusionTexts[i])
           setText = true
           q[q.length - 1].text = conclusionTexts[i]
         }
@@ -140,15 +159,18 @@ class Eligibility extends React.Component {
       }
       this.setState({ questions: q })
     }
+    // TODO: Move this logic to helpers
     const deactivateChildren = root => {
       if (!root) return
       root.active = false
+      root.focused = false
 
       // Reset all flags below this child
       if (root.responseList) {
         for(let i = 0; i < root.responseList.length; i++) {
           const response = root.responseList[i]
           response.active = false
+          // response.focused = false
           if (response.flags) {
             for(let i = 0; i < response.flags.length; i++) {
               this.setFlag(response.flags[i][0], 'unknown')
@@ -161,36 +183,109 @@ class Eligibility extends React.Component {
         deactivateChildren(root.responseList[i].value)
       }
     }
-    // Hide all responses
-    for(let i = 0; i < question.responseList.length; i++) {
-      deactivateChildren(question.responseList[i].value)
-    }
 
-    if (response.flags && response.flags.length > 0) {
-      for(let i = 0; i < response.flags.length; i++) {
-        this.setFlag(response.flags[i][0], response.flags[i][1])
+    for(let i = 0; i < query.length; i++) {
+      const term = query[i]
+      const questionIdx = questions.findIndex(q => {
+        return q.id == term[0]
+      })
+      const question = questions[questionIdx]
+      question.focused = false
+      question.responseList.forEach(r => {
+        r.active = false
+        r.focused = false
+      })
+      const responseIdx = question.responseList.findIndex(r => r.label == term[1])
+
+      // Hide all responses
+      for(let i = 0; i < question.responseList.length; i++) {
+        deactivateChildren(question.responseList[i].value)
+      }
+
+      const response = questions[questionIdx].responseList[responseIdx]
+      if (response.flags && response.flags.length > 0) {
+        for(let i = 0; i < response.flags.length; i++) {
+          this.setFlag(response.flags[i][0], response.flags[i][1])
+        }
+      }
+
+      // TODO: This doesn't work on load if it is already showing variable text
+      if (response.value.variableText && !init) setActiveFromFlags(response.flowResult)
+
+      response.active = true
+      response.value.active = true
+
+      // set the last one to focused
+      if (i === query.length - 1) {
+        response.value.focused = true
       }
     }
-    if (response.value.variableText) setActiveFromFlags(response.flowResult)
 
-    response.value.active = true
+    // Edge case for empty query (first question visible)
+    if (query.length === 0) {
+      const question = questions[0]
+      questions[0].active = true
+      questions[0].focused = true
+      for(let i = 0; i < question.responseList.length; i++) {
+        deactivateChildren(question.responseList[i].value)
+      }
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.setStateFromQuery()
+    }
+  }
+
+  handleClick(questionIdx, responseIdx) {    
+    const q = this.state.questions.slice(0)
+    const question = q[questionIdx]
+    const response = question.responseList[responseIdx]
+    const search = this.props.location.search.substring(1);
+    let query = queryToArray(search)
+
+    // if already exists in the array, change the value, otherwise push new value
+    // NOTE: This is intentionally a double equals (==)
+    const queryQuestionIdx = query.findIndex(el => el[0] == questionIdx)
+    if (queryQuestionIdx >= 0) {
+      // On change we need to chop off the rest of the query string
+      query[queryQuestionIdx][1] = response.label
+      query = query.slice(0, queryQuestionIdx + 1)
+    } else {
+      query.push([questionIdx, response.label])
+    }
+    const queryString = query.map(a => a[0] + '=' + a[1]).join('&');
+    navigate(`?${queryString}`)
     this.setState({ questions: q })
+  }
+  componentDidMount() {
+    // decode query params to determine initial flowchart state
+    this.setStateFromQuery(true)
   }
   render() {
     const questionList = this.state.questions.map((question, idx) => {
       const responseList = question.responseList.map(((response, idx2) => (
         <li key={idx2}>
-          <button onClick={() => this.handleClick(idx, idx2)}>
-            <span style={{fontWeight: response.active ? 700 : 400}}>
+          <SecondaryButton onClick={() => this.handleClick(idx, idx2)}>
+            <span className={`${response.active ? 'active ' : ''}choice`}>
               {response.label}
             </span>
-          </button>
+          </SecondaryButton>
         </li>
       )))
       return (
-        <li style={{order: question.order,display: question.active ? 'block' : 'none'}} key={question.id}>
-          <p>{question.text}</p>
-          <ul>{responseList}</ul>
+        <li className={`${question.active ? 'active ' : ''}question-item${question.focused ? ' focused' : ''}`} style={{order: question.order}} key={question.id}>
+          <div className="card">
+          {!q1.focused &&
+            <small className="back-button" onClick={() => { if (window) window.history.back() }}>Previous Question</small>
+          }
+          <div className="card-body">
+            <p>{question.text}</p>
+          </div>
+          <div className="card-footer">
+            <ul className="response-list">{responseList}</ul>
+          </div>
+          </div>
         </li>
       )
     })
@@ -205,9 +300,10 @@ class Eligibility extends React.Component {
     })
     return (
       <Layout>
-        <div>
-          <ul style={{display: 'flex', flexDirection: 'column'}}>{questionList}</ul>
-          <hr />
+        <div className="elgibility-container">
+          {/* <div className="card-body"> */}
+          <ul className="question-list">{questionList}</ul>
+          {/* </div> */}
           {/* <h4>state (TODO: Hide this in prod)</h4>
           <ul>
             {flagList}

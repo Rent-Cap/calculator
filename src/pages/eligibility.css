@@ -1,0 +1,37 @@
+.question-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.question-item {
+  /* color: red; */
+  display: none
+
+}
+
+.question-item.focused {
+  display: block
+}
+
+.card > .back-button {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.active.choice {
+  font-weight: 700;
+}
+
+.response-list {
+  display: flex;
+}
+
+.response-list > li {
+  margin-right: 20px;
+}
+
+.elgibility-container .card-body {
+  min-height: 200px;
+  display: flex;
+  align-items: center
+}
