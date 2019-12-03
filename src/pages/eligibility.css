@@ -1,6 +1,7 @@
 .question-list {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .question-item {
@@ -30,8 +31,15 @@
   margin-right: 20px;
 }
 
-.elgibility-container .card-body {
+.eligibility-container .card-body {
   min-height: 200px;
   display: flex;
   align-items: center
+}
+
+.eligibility-container {
+  display: flex;
+  align-items: center;
+  min-height: 400px;
+  justify-content: center;
 }

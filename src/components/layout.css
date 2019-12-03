@@ -628,6 +628,12 @@ header {
 .CalendarMonthGrid__vertical {
   width: 100% !important
 }
+footer {
+  padding: 40px;
+}
+nav {
+  margin-bottom: 30px;
+}
 @media only screen and (max-width: 600px) {
   html {
     font-size: 100%;

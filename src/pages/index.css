@@ -11,3 +11,57 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.row {
+  min-height: 400px;
+  margin: 40px 0;
+}
+.hero-image {
+  background: grey;
+  height: 200px;
+  width: 200px;
+  border-radius: 100%;
+  margin: 40px;
+}
+
+.lawyer-image {
+  background: grey;
+  height: 200px;
+  width: 200px;
+  border-radius: 100%;
+  margin: 40px;
+}
+
+.calculator-image {
+  background: grey;
+  height: 200px;
+  width: 200px;
+  margin: 40px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.col-lg {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.col-sm {
+  display: flex;
+  align-items: center;
+}
+
+@media only screen and (max-width: 892px) {
+  /* section {
+    flex-wrap: wrap;
+    justify-content: center;
+  } */
+  .calculator.row {
+    flex-direction: column-reverse
+  }
+}

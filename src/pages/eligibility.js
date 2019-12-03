@@ -30,7 +30,7 @@ const q7 = new Question('Is a portion of your rent paid for by a government agen
 const q8 = new Question('Has anyone in your building unit lived there for at least 24 months?', 1)
 const q9 = new Question(' Is your building a dormitory connected to any higher education institutions? Buildings that were constructed and maintained by a higher education institution (i.e. University) for students to occupy are exempt from the Tenant Protection Act.', 7)
 const q10 = new Question('Did your landlord live on the property prior to the start of your tenancy and does your landlord continue to reside on the property?', 7)
-const temp = new Question('Sorry, encountered an error: Please send current URL to c4sf rentcap slack group for fix', 17)
+const temp = new Question('Sorry, encountered an error: Please go to the previous question', 17)
 // red
 const conclusion1 = new Question('Unfortunately, your building is neither covered by rent control nor just-cause eviction protection from the Tenant Protections Act.', 17)
 // blue
@@ -300,7 +300,8 @@ class Eligibility extends React.Component {
     })
     return (
       <Layout>
-        <div className="elgibility-container">
+        <h1>Are you eligible?</h1>
+        <div className="eligibility-container">
           {/* <div className="card-body"> */}
           <ul className="question-list">{questionList}</ul>
           {/* </div> */}
