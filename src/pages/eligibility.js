@@ -78,7 +78,11 @@ class Eligibility extends React.Component {
         </li>
       )))
       return (
-        <li className={`${question.active ? 'active ' : ''}question-item${question.focused ? ' focused' : ''}`} style={{order: question.order}} key={question.id}>
+        <li
+          className={`${question.active ? 'active ' : ''}question-item${question.focused ? ' focused' : ''}`}
+          style={{order: question.order}}
+          key={question.id}
+        >
           <div className="card">
           {!this.state.questions[0].focused &&
             <small className="back-button" onClick={() => { this.previousQuestion() }}>Previous Question</small>
