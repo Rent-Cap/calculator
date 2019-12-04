@@ -17,7 +17,7 @@ const AttributionCard = ({ name, photoUrl, title, description, links }) => {
   })
   return (
     <div className="contributor card">
-      <div class="portrait card-img-top"></div>
+      <div className="portrait card-img-top"></div>
       <div className="card-body">
         <div className="contributor-header">
           <h4 className="card-title">
