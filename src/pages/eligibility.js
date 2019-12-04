@@ -10,29 +10,34 @@ class Eligibility extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      questions
+      questions,
+      query: ''
     }
     this.handleClick = this.handleClick.bind(this)
     this.setStateFromQuery = this.setStateFromQuery.bind(this)
     this.previousQuestion = this.previousQuestion.bind(this)
   }
-  setStateFromQuery() {
-    const query = this.props.location.search.substring(1);
+  setStateFromQuery(q) {
+    // const query = this.props.location.search.substring(1);
+    const query = q || this.state.query.substring(1)
     const questions = getQuestionStateFromQuery(query)
     this.setState({ questions })
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.location.search !== prevProps.location.search) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.query !== prevState.query) {
       this.setStateFromQuery()
     }
+    // if (this.props.location.search !== prevProps.location.search) {
+    //   this.setStateFromQuery()
+    // }
   }
 
   handleClick(questionIdx, responseIdx) {    
     const q = this.state.questions.slice(0)
     const question = q[questionIdx]
     const response = question.responseList[responseIdx]
-    const search = this.props.location.search.substring(1);
-
+    // const search = this.props.location.search.substring(1);
+    const search = this.state.query.substring(1)
     // TODO: Should be able to leave the query as a string instead of doing this
     let query = queryToArray(search)
 
@@ -47,19 +52,24 @@ class Eligibility extends React.Component {
       query.push([questionIdx, response.label])
     }
     const queryString = query.map(a => a[0] + '=' + a[1]).join('&');
-    navigate(`?${queryString}`)
+    // navigate(`?${queryString}`)
+    this.setState({query: `?${queryString}`})
   }
   componentDidMount() {
     // decode query params to determine initial flowchart state
-    this.setStateFromQuery()
+    this.setStateFromQuery(this.props.location.search.substring(1))
   }
   previousQuestion() {
-    const search = this.props.location.search.substring(1);
+    // const search = this.props.location.search.substring(1);
+    const search = this.state.query.substring(1)
     if (!search) return
     const arr = search.split('&')
-    if (arr.length === 0) navigate('')
+    // if (arr.length === 0) navigate('')
+    if (arr.length === 0) return
     arr.pop()
-    navigate(`?${arr.join('&')}`)
+    // navigate(`?${arr.join('&')}`)
+    const query = `?${arr.join('&')}`
+    this.setState({ query })
   }
   render() {
     const questionList = this.state.questions.map((question, idx) => {
