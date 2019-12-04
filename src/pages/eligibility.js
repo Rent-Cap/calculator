@@ -14,6 +14,7 @@ class Eligibility extends React.Component {
     }
     this.handleClick = this.handleClick.bind(this)
     this.setStateFromQuery = this.setStateFromQuery.bind(this)
+    this.previousQuestion = this.previousQuestion.bind(this)
   }
   setStateFromQuery() {
     const query = this.props.location.search.substring(1);
@@ -52,6 +53,14 @@ class Eligibility extends React.Component {
     // decode query params to determine initial flowchart state
     this.setStateFromQuery()
   }
+  previousQuestion() {
+    const search = this.props.location.search.substring(1);
+    if (!search) return
+    const arr = search.split('&')
+    if (arr.length === 0) navigate('')
+    arr.pop()
+    navigate(`?${arr.join('&')}`)
+  }
   render() {
     const questionList = this.state.questions.map((question, idx) => {
       const responseList = question.responseList.map(((response, idx2) => (
@@ -72,7 +81,7 @@ class Eligibility extends React.Component {
         <li className={`${question.active ? 'active ' : ''}question-item${question.focused ? ' focused' : ''}`} style={{order: question.order}} key={question.id}>
           <div className="card">
           {!this.state.questions[0].focused &&
-            <small className="back-button" onClick={() => { if (window) window.history.back() }}>Previous Question</small>
+            <small className="back-button" onClick={() => { this.previousQuestion() }}>Previous Question</small>
           }
           <div className="card-body">
             <p>{question.text}</p>
