@@ -1,6 +1,6 @@
-import React from 'react'
-import Layout from '../components/Layout'
-import SEO from "../components/Seo"
+import React from 'react';
+import Layout from '../components/Layout';
+import SEO from '../components/Seo';
 
 const About = () => (
   <Layout>
@@ -11,6 +11,6 @@ const About = () => (
     <p>This bill would, with certain exceptions, prohibit an owner, as defined, of residential real property from terminating a tenancy without just cause, as defined, which the bill would require to be stated in the written notice to terminate tenancy when the tenant has continuously and lawfully occupied the residential real property for 12 months, except as provided. The bill would require, for certain just cause terminations that are curable, that the owner give a notice of violation and an opportunity to cure the violation prior to issuing the notice of termination. The bill, if the violation is not cured within the time period set forth in the notice, would authorize a 3-day notice to quit without an opportunity to cure to be served to terminate the tenancy. The bill would require, for no-fault just cause terminations, as specified, that the owner, at the owner’s option, either assist certain tenants to relocate, regardless of the tenant’s income, by providing a direct payment of one month’s rent to the tenant, as specified, or waive in writing the payment of rent for the final month of the tenancy, prior to the rent becoming due. The bill would require the actual amount of relocation assistance or rent waiver provided to a tenant that fails to vacate after the expiration of the notice to terminate the tenancy to be recoverable as damages in an action to recover possession. The bill would provide that if the owner does not provide relocation assistance, the notice of termination is void. The bill would except certain properties and circumstances from the application of its provisions. The bill would require an owner of residential property to provide prescribed notice to a tenant of the tenant’s rights under these provisions. The bill would not apply to residential real property subject to a local ordinance requiring just cause for termination adopted on or before September 1, 2019, or to residential real property subject to a local ordinance requiring just cause for termination adopted or amended after September 1, 2019, that is more protective than these provisions, as defined. The bill would void any waiver of the rights under these provisions. The bill would repeal these provisions as of January 1, 2030.</p>
     <a href="https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201920200AB1482">Read more here.</a>
   </Layout>
-)
+);
 
-export default About
+export default About;

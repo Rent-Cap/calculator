@@ -1,15 +1,14 @@
-import React from "react"
+import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
-import Layout from "../components/Layout"
 import { withTranslation } from 'react-i18next';
-import { PrimaryButton, SecondaryButton } from "../components/Buttons";
-import { Link } from "gatsby";
+import { Link } from 'gatsby';
+import Layout from '../components/Layout';
+import { PrimaryButton, SecondaryButton } from '../components/Buttons';
 
-const IndexPage = ({ t }) => {
-  return (
+const IndexPage = ({ t }) => (
   <Layout>
     <div className="row">
       <div className="col-md">
@@ -22,15 +21,15 @@ const IndexPage = ({ t }) => {
         <Link to="/eligibility"><PrimaryButton>Am I Eligible?</PrimaryButton></Link>
       </div>
       <div className="image-container col-sm">
-        <div className="hero-image"></div>
+        <div className="hero-image" />
       </div>
     </div>
     <div className="calculator row">
       <div className="image-container col-sm">
-        <div className="calculator-image"></div>
+        <div className="calculator-image" />
       </div>
       <div className="col-lg">
-        <h2>Already qualified?</h2> 
+        <h2>Already qualified?</h2>
         <p>Calculate how much rent is owed to you.</p>
         <Link to="/calculator"><PrimaryButton>Calculate My Refund</PrimaryButton></Link>
       </div>
@@ -42,11 +41,10 @@ const IndexPage = ({ t }) => {
         <Link to="#"><SecondaryButton>Coming soon</SecondaryButton></Link>
       </div>
       <div className="col-sm">
-        <div className="lawyer-image"></div>
+        <div className="lawyer-image" />
       </div>
     </div>
   </Layout>
-  )
-}
+);
 
-export default withTranslation()(IndexPage)
+export default withTranslation()(IndexPage);
