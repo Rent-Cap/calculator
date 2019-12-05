@@ -1,4 +1,4 @@
-import { calculateTotalAmountOwedToTenant, determineRentOnDateFromRentRanges, determineMaxRentFromRentRanges, checkFlags } from '../Helpers'
+import { calculateTotalAmountOwedToTenant, determineRentOnDateFromRentRanges, determineMaxRentFromRentRanges, checkFlags, calculateMaxRent } from '../Helpers'
 import moment from 'moment'
 
 // Move In date: January 1st, 2019
@@ -17,6 +17,8 @@ const jan1st2020 = moment([2020, 0, 1])
 const feb1st2020 = moment([2020, 1, 1])
 const apr1st2020 = moment([2020, 3, 1])
 const july1st2020 = moment([2019, 6, 1])
+const aug1st2020 = moment([2020, 7, 1])
+const aug1st2021 = moment([2021, 7, 1])
 const cpi = 0.04
 
 describe('calculateAmountOwedToTenant', () => {
@@ -111,8 +113,24 @@ describe('determineMaxRentFromRentRanges', () => {
     const result = determineMaxRentFromRentRanges(mar152019, rentRanges, cpi)
     expect(result).toBe("1308.00")
   })
+  it('Check scenario #3', () => {
+    const rent1 = { rent: 1200, startDate: jan1st2019, endDate: july1st2019 }
+    const rent2 = { rent: 1300, startDate: july1st2019, endDate: aug1st2020 }
+    const rentRanges = [rent1, rent2]
+    const result = determineMaxRentFromRentRanges(aug1st2020, rentRanges, cpi)
+    expect(result).toBe('1417.00')
+  })
   it('Throws error if no target', () => {
     expect(() => determineMaxRentFromRentRanges(null, [], cpi)).toThrow()
+  })
+})
+
+describe('calculateMaxRent', ()=> {
+  it('Returns how much your rent can increase in a year, checks scenario #4', ()=> {
+    const pastRent = 1400
+    const cpi = 0.04
+    const result = calculateMaxRent(pastRent, cpi)
+    expect(result).toBe('1526.00')
   })
 })
 // Scenario #1
@@ -143,6 +161,7 @@ describe('determineMaxRentFromRentRanges', () => {
 // Date of Last (lawful) Rent Increase: July 1st, 2019
 // > Output: Your rent is legal. The maximum amount your rent can go to today is $1417.
 // aug_1_2019_rent * 1.09 = $1300 1.09 = $1417
+
 
 // Scenario #4
 // Project how much rent can increase within the year
