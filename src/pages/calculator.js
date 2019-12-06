@@ -11,6 +11,7 @@ import moment from 'moment'
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import SEO from "../components/Seo"
+import MailChimp from '../components/MailChimp'
 
 const emptyRentRange1 = {rent: 0, startDate: moment([2019, 2, 15]), endDate: moment([2019, 2, 15]), focusedInput: null, id: 0}
 const emptyRentRange2 = {rent: 0, startDate: moment([2020, 0, 1]), endDate: moment([2020, 1, 1]), focusedInput: null, id: 1}
@@ -121,6 +122,7 @@ class Calculator extends React.Component {
       <Layout>
         <SEO title="Calculator" />
         <h1>{t('calculator-title')}</h1>
+        <MailChimp />
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
