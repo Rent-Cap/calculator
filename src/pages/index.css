@@ -12,10 +12,31 @@ code {
     monospace;
 }
 
-.row {
+.index.row {
   min-height: 400px;
   margin: 40px 0;
 }
+.mailchimp.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.mailchimp.row {
+  justify-content: center;
+}
+.mailchimp.row:first-child {
+  margin-bottom: 20px;
+}
+.mailchimp.row > input {
+  padding: 10px
+}
+
+.mailchimp.row > input:first-child {
+  margin-right: 20px;
+}
+
 .hero-image {
   background: grey;
   height: 200px;
@@ -63,5 +84,11 @@ code {
   } */
   .calculator.row {
     flex-direction: column-reverse
+  }
+  .mailchimp.row > .form-control{
+    width: 45%;
+  }
+  .mailchimp.row > .form-control:first-child{
+    margin-right: 10px;
   }
 }
