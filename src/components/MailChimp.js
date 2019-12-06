@@ -10,39 +10,35 @@ const subscribe = async user => {
   // https://us4.api.mailchimp.com/3.0/
   // to add a member, post to:
   // lists/66232ac6c7/members/
-  const apiKey = '...-us4'
-  const url = 'https://us4.api.mailchimp.com/3.0/lists/66232ac6c7/members/';
+  // const apiKey = '...-us4'
+  // const url = 'https://us4.api.mailchimp.com/3.0/lists/66232ac6c7/members/';
+
+  // NOTE: run site with netlify dev
+  const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/' : '/'
+  const url = `${uri}api/subscribe`
   const data = {
-    "email_address": "urist.mcvankab@freddiesjokes.com",
+    "email_address": "bbbaaabbburist.mcvanasdfkddab@freddiesjokes.com",
     "status": "subscribed",
-    "merge_fields": {
-        "FNAME": "Urist2",
-        "LNAME": "McVankab"
-    }
+    "FNAME": "bbbaaabbbaaaUriewfst2",
+    "LNAME": "bbbMcVanddkab"
   }
-//   curl --request GET \
-// --url 'https://us4.api.mailchimp.com/3.0/' \
-// --user 'anystring:...-us4'
+
   try {
     const response = await fetch(url, {
       method: 'POST', // or 'PUT'
       body: JSON.stringify(data), // data can be `string` or {object}!
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `apikey ${apiKey}`
+        // 'Authorization': `apikey ${apiKey}`
       }
     });
-    const json = await response.json();
-    console.log('Success:', JSON.stringify(json));
+    const json = await response;
+    console.log('json', json)
+    // console.log('Success:', JSON.stringify(json));
   } catch (error) {
     console.error('Error:', error);
   }
-  fetch(url, {
-    method: 'GET',
-
-  })
-
-  // PROCESS.ENV.MAILCHIMP_API_KEY
 }
 
 const MailChimp = () => {
