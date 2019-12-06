@@ -1,58 +1,68 @@
 // https://medium.com/@mattdgregg/netlify-dev-serverless-functions-mailchimp-subscribe-form-tutorial-28ffaa51ba99
 const fetch = require('node-fetch'); 
 const base64 = require('base-64'); 
-exports.handler = async (event, context) => { 
-  // Only allow POST
-  console.log('event', event)
-
-  // if (event.httpMethod !== 'POST') { 
-  //   return { statusCode: 405, body: 'Method Not Allowed' };
-  // }
+exports.handler = async (event, context, callback) => { 
+  const creds = `any:${process.env.MAILCHIMP_KEY}`;
+  const headers = { 
+    Accept: '*/*', 
+    'Content-Type': 'application/json', 
+    'Access-Control-Allow-Origin': '*',
+  }
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 200,
+      headers,
+      body: "This was not a POST request!"
+    };
+  }
   const errorGen = msg => {
     return { statusCode: 500, body: msg }; 
-  }; 
-  try { 
-    const { email_address, FNAME, LNAME, status } = JSON.parse(event.body);
-    // if (!email) { 
-    //   return errorGen('Missing Email');
-    // } 
+  };
+  try {
+    const { email_address, FNAME, LNAME, ZIPCODE, status } = JSON.parse(event.body);
+    if (!email_address) { 
+      return errorGen('Missing Email');
+    } 
     const subscriber = { 
       email_address, 
-      status,
+      status: status ? status : 'subscribed',
       merge_fields: {
         FNAME,
-        LNAME
+        LNAME,
+        ZIPCODE
       }
     }; 
-    const creds = `any:${process.env.MAILCHIMP_KEY}`;
     // console.log('process.env.MAILCHIMP_KEY', process.env.MAILCHIMP_KEY)
     const data_center = 'us4'
     const list_id = '66232ac6c7'
     console.log('subscriber', subscriber)
     const response = await fetch(`https://${data_center}.api.mailchimp.com/3.0/lists/${list_id}/members/`, { 
       method: 'POST', 
-      headers: { 
-        Accept: '*/*', 
-        'Content-Type': 'application/json', 
-        // 'Access-Control-Allow-Origin': '*',
-        Authorization: `Basic ${base64.encode(creds)}`, 
-      }, 
+      headers: Object.assign({}, headers, { Authorization: `Basic ${base64.encode(creds)}` }),
       body: JSON.stringify(subscriber), 
-    }); 
+    });
     const data = await response.json();
-    console.log('data', data)
     if (!response.ok) { 
       // NOT res.status >= 200 && res.status < 300 
-      return { statusCode: data.status, body: data.detail }; 
+      return { 
+        statusCode: data.status,
+        headers, 
+        body: data.detail
+      }; 
     }
-    return { 
+    const res = { 
       statusCode: 200, 
-      body: JSON.stringify({ msg: "You've signed up to the mailing list!", detail: data, }), 
-    }; 
+      headers,
+      // body: JSON.stringify({ msg: "You've signed up to the mailing list!", detail: data, }), 
+      body: 'success'
+    };
+    // console.log('res', res)
+    return res
   } catch (err) { 
     console.log(err); // output to netlify function log 
     return { 
       statusCode: 500, 
+      headers,
       body: JSON.stringify({ msg: err.message }),
     };
   } 

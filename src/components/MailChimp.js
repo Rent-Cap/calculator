@@ -1,85 +1,76 @@
 import React, { useState } from 'react'
 import './mailchimp.css'
 
-const subscribe = async user => {
-  // audience id
-  // 66232ac6c7
-  // api key
-  // ...-us4
-  // url
-  // https://us4.api.mailchimp.com/3.0/
-  // to add a member, post to:
-  // lists/66232ac6c7/members/
-  // const apiKey = '...-us4'
-  // const url = 'https://us4.api.mailchimp.com/3.0/lists/66232ac6c7/members/';
-
-  // NOTE: run site with netlify dev
+const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE}) => {
+  // NOTE: run site with netlify dev if there were any changes to subscribe.js
   const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/' : '/'
   const url = `${uri}api/subscribe`
   const data = {
-    "email_address": "bbbaaabbburist.mcvanasdfkddab@freddiesjokes.com",
-    "status": "subscribed",
-    "FNAME": "bbbaaabbbaaaUriewfst2",
-    "LNAME": "bbbMcVanddkab"
+    email_address,
+    status,
+    FNAME,
+    LNAME,
+    ZIPCODE
   }
 
   try {
-    const response = await fetch(url, {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': `apikey ${apiKey}`
-      }
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
-    const json = await response;
-    console.log('json', json)
-    // console.log('Success:', JSON.stringify(json));
+    console.log('res', res)
+    if (res.status === 200) {
+      console.log('success')
+    } else if (res.status === 400) {
+      console.log('acct already exists')
+    } else {
+      console.error('subscribe.js failure')
+    }
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
 const MailChimp = () => {
-  const [name, setName] = useState('')
+  const [FNAME, setFName] = useState('')
+  const [LNAME, setLName] = useState('')
+  const [ZIPCODE, setZip] = useState('')
+  const [email_address, setEmail] = useState('')
   return (
-    <div id="mc_embed_signup">
-      {/* <form action="https://gmail.us4.list-manage.com/subscribe/post?u=b9c7524f0dc0712a8752cf555&amp;id=66232ac6c7"
-        method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank"
-        novalidate> */}
-      <div id="mc_embed_signup_scroll">
-        <h2>Subscribe</h2>
-        <div class="indicates-required">
-          <span class="asterisk">*</span> 
-          indicates required
+    <div>
+      <div>
+        <div>
+          <label>First Name</label>
+          <input type="text" onChange={e => setFName(e.target.value)} type="text" value={FNAME}/>
         </div>
-        <div class="mc-field-group">
-          <label for="mce-FNAME">First Name </label>
-          <input onChange={e => setName(e.target.value)} type="text" value={name} name="FNAME" class="" id="mce-FNAME"/>
+        <div>
+          <label>Last Name</label>
+          <input type="text" onChange={e => setLName(e.target.value)} value={LNAME}/>
         </div>
-        <div class="mc-field-group">
-          <label for="mce-LNAME">Last Name </label>
-          <input type="text" value="" name="LNAME" class="" id="mce-LNAME"/>
+        <div>
+          <label>Email Address</label>
+          <input type="email" onChange={e => setEmail(e.target.value)} value={email_address}/>
         </div>
-        <div class="mc-field-group">
-          <label for="mce-EMAIL">Email Address <span class="asterisk">*</span>
-          </label>
-          <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"/>
+        <div>
+          <label>Zip Code</label>
+          <input type="number" onChange={e => setZip(e.target.value)} value={ZIPCODE}/>
         </div>
-        <div id="mce-responses" class="clear">
-          <div class="response" id="mce-error-response" style={{display:"none"}}></div>
-          <div class="response" id="mce-success-response" style={{display:"none"}}></div>
+        <div style={{position: "absolute", left: "-5000px"}} aria-hidden="true"><input type="text"
+          name="b_b9c7524f0dc0712a8752cf555_66232ac6c7" tabIndex="-1" value=""/>
         </div>
-        {/* <div style={{position: "absolute", left: "-5000px;"}} aria-hidden="true"><input type="text"
-            name="b_b9c7524f0dc0712a8752cf555_66232ac6c7" tabindex="-1" value=""/>
-            </div> */}
-        <div onClick={() => subscribe()} class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"
-            class="button"/>
-              
-        </div>
+        <button onClick={() => {
+          const subscriber = {
+            FNAME,
+            LNAME,
+            email_address,
+            ZIPCODE,
+            status: 'subscribed'
+          }
+          subscribe(subscriber)
+        }}>
+          Subscribe
+        </button>
       </div>
-      {/* </form> */}
     </div>
   )
 }
