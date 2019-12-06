@@ -35,7 +35,6 @@ exports.handler = async (event, context, callback) => {
     // console.log('process.env.MAILCHIMP_KEY', process.env.MAILCHIMP_KEY)
     const data_center = 'us4'
     const list_id = '66232ac6c7'
-    console.log('subscriber', subscriber)
     const response = await fetch(`https://${data_center}.api.mailchimp.com/3.0/lists/${list_id}/members/`, { 
       method: 'POST', 
       headers: Object.assign({}, headers, { Authorization: `Basic ${base64.encode(creds)}` }),

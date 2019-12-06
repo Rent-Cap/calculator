@@ -77,6 +77,10 @@ code {
   align-items: center;
 }
 
+.form-control {
+  width: auto;
+}
+
 @media only screen and (max-width: 892px) {
   /* section {
     flex-wrap: wrap;

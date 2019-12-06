@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './mailchimp.css'
 import { PrimaryButton } from './Buttons'
 
-const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE}) => {
+const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE, setStatus}) => {
   // NOTE: run site with netlify dev if there were any changes to subscribe.js
   const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/' : '/'
   const url = `${uri}api/subscribe`
@@ -22,10 +22,14 @@ const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE}) => {
     console.log('res', res)
     if (res.status === 200) {
       console.log('success')
+      setStatus('success')
+
     } else if (res.status === 400) {
-      console.log('acct already exists')
+      setStatus('failure')
+      console.log('400 status, acct already exists?')
     } else {
       console.error('subscribe.js failure')
+      setStatus('failure')
     }
   } catch (error) {
     console.error('Error:', error);
@@ -35,8 +39,10 @@ const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE}) => {
 const MailChimp = () => {
   const [FNAME, setFName] = useState('')
   const [LNAME, setLName] = useState('')
+  const [status, setStatus] = useState('')
   const [ZIPCODE, setZip] = useState('')
   const [email_address, setEmail] = useState('')
+  const statusText = status === 'success' ? 'Success! You will be contacted by advocacy groups.' : 'I want to be contacted by advocacy groups'
   return (
     <div className="mailchimp container">
       <div className="mailchimp row">
@@ -44,26 +50,29 @@ const MailChimp = () => {
         <input className="form-control" type="text" placeholder="Last Name (optional)" onChange={e => setLName(e.target.value)} value={LNAME}/>
       </div>
       <div className="mailchimp row">
-        <input className="form-control" type="email" placeholder="Email (optional)" onChange={e => setEmail(e.target.value)} value={email_address}/>
-        <input className="form-control" type="number" placeholder="Zip Code (required)" onChange={e => setZip(e.target.value)} value={ZIPCODE}/>
+        <input className="form-control" style={{border: status === 'failure' ? '1px solid red' : ''}} type="email" placeholder="Email (required)" onChange={e => setEmail(e.target.value)} value={email_address}/>
+        <input className="form-control" type="number" placeholder="Zip Code (optional)" onChange={e => setZip(e.target.value)} value={ZIPCODE}/>
       </div>
       {/* Clever way of avoiding bot form inputs */}
       <div style={{position: "absolute", left: "-5000px"}} aria-hidden="true">
         <input type="text" name="b_b9c7524f0dc0712a8752cf555_66232ac6c7" tabIndex="-1" value=""/>
       </div>
-      <small>I want to be contacted by advocacy groups</small>
-      <PrimaryButton onClick={() => {
-        const subscriber = {
-          FNAME,
-          LNAME,
-          email_address,
-          ZIPCODE,
-          status: 'subscribed'
-        }
-        subscribe(subscriber)
-      }}>
-        Subscribe
-      </PrimaryButton>
+      <small>{statusText}</small>
+      {status !== 'success' &&
+        <PrimaryButton onClick={() => {
+          const subscriber = {
+            FNAME,
+            LNAME,
+            email_address,
+            ZIPCODE,
+            status: 'subscribed',
+            setStatus,
+          }
+          subscribe(subscriber)
+        }}>
+          Subscribe
+        </PrimaryButton>
+      }
     </div>
   )
 }
