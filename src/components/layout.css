@@ -671,6 +671,7 @@ nav {
   width: 32px;
   height: 32px;
 }
+/* TODO: Move a lot of this CSS to a header.css file */
 .hamburger {
   width: 64px;
   height: 64px;
@@ -698,7 +699,10 @@ nav {
   position: relative;
   z-index: 3;
 }
-
+.navlink-group.active > .navbar-nav > a {
+  color: var(--blue);
+  font-weight: 700;
+}
 @media only screen and (max-width: 1000px) {
   .navlink-group {
     display: none;

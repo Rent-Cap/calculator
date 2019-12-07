@@ -1,10 +1,10 @@
 import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React, { useState } from "react"
+// import PropTypes from "prop-types"
+import React from "react"
 import SEO from "../components/Seo"
 import 'bootstrap/dist/css/bootstrap.css';
-import { PrimaryButton, SecondaryButton } from '../components/Buttons'
-import i18n from '../i18n';
+// import { PrimaryButton, SecondaryButton } from '../components/Buttons'
+// import i18n from '../i18n';
 import { withTranslation } from 'react-i18next';
 import logo from '../images/logo.svg'
 import hamburger from '../images/hamburger.svg'
@@ -30,7 +30,6 @@ class Header extends React.Component {
         <div onClick={this.handleOutsideClick} className={`overlay${this.state.showMenu ? ' active' : ''}`}></div>
         <SEO title="Home" />
         <Link className={`navbar-brand${this.state.showMenu ? ' hidden' : ''}`} to="/"><img src={logo}></img></Link>
-        {/* <div className="container"> */}
         <div className={`navlink-group${this.state.showMenu ? ' active' : ''}`}>
           <div className="navbar-nav">
             <Link className="nav-item nav-link" to="/bill">
@@ -42,7 +41,7 @@ class Header extends React.Component {
             <Link className="nav-item nav-link" to="/calculator">
               Rent Calculator
             </Link>
-            <Link className="nav-item nav-link">
+            <Link className="nav-item nav-link" to="/resources">
               Resources (Coming Soon)
             </Link>
             <Link className="nav-item nav-link" to="/about">
@@ -51,7 +50,6 @@ class Header extends React.Component {
           </div>
         </div>
         <div className={`hamburger${this.state.showMenu ? ' hidden' : ''}`} onClick={this.showNavLinks}><img src={hamburger}></img></div>
-        {/* </div> */}
         {/* TODO: Add spanish translation */}
         {/* <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
         <SecondaryButton onClick={() => i18n.changeLanguage('es')}>Espanol</SecondaryButton> */}
