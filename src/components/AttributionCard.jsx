@@ -12,9 +12,10 @@ const AttributionCard = ({
 }) => {
   const linkList = links.map((link) => (
     <li key={link.href}>
-      <a href={link.href}><img src={linkTypeToImage[link.type]} /></a>
+      <a href={link.href}><img alt="social-link" src={linkTypeToImage[link.type]} /></a>
     </li>
   ));
+  console.log('TODO: ', photoUrl);
   return (
     <div className="contributor card">
       <div className="portrait card-img-top" />

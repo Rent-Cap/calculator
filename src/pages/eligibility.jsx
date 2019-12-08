@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'gatsby';
 import { navigate } from '@reach/router';
 import Layout from '../components/Layout';
 import { getQuestionStateFromQuery, queryToArray, questions } from '../Helpers';
 import { SecondaryButton, PrimaryButton } from '../components/Buttons';
 import './eligibility.css';
-import { Link } from 'gatsby';
 
 class Eligibility extends React.Component {
   constructor(props) {
@@ -17,16 +17,23 @@ class Eligibility extends React.Component {
     this.previousQuestion = this.previousQuestion.bind(this);
   }
 
-  setStateFromQuery() {
-    const query = this.props.location.search.substring(1);
-    const questions = getQuestionStateFromQuery(query);
-    this.setState({ questions });
+  componentDidMount() {
+    // decode query params to determine initial flowchart state
+    this.setStateFromQuery();
   }
 
   componentDidUpdate(prevProps) {
+    // eslint-disable-next-line
     if (this.props.location.search !== prevProps.location.search) {
       this.setStateFromQuery();
     }
+  }
+
+  setStateFromQuery() {
+    // eslint-disable-next-line
+    const query = this.props.location.search.substring(1);
+    const q = getQuestionStateFromQuery(query);
+    this.setState({ questions: q });
   }
 
   handleClick(questionIdx, responseIdx) {
@@ -40,6 +47,7 @@ class Eligibility extends React.Component {
 
     // if already exists in the array, change the value, otherwise push new value
     // NOTE: This is intentionally a double equals (==)
+    // eslint-disable-next-line
     const queryQuestionIdx = query.findIndex((el) => el[0] == questionIdx);
     if (queryQuestionIdx >= 0) {
       // On change we need to chop off the rest of the query string
@@ -50,11 +58,6 @@ class Eligibility extends React.Component {
     }
     const queryString = query.map((a) => `${a[0]}=${a[1]}`).join('&');
     navigate(`?${queryString}`);
-  }
-
-  componentDidMount() {
-    // decode query params to determine initial flowchart state
-    this.setStateFromQuery();
   }
 
   previousQuestion() {
@@ -69,7 +72,7 @@ class Eligibility extends React.Component {
   render() {
     const questionList = this.state.questions.map((question, idx) => {
       const responseList = question.responseList.map(((response, idx2) => (
-        <li key={idx2}>
+        <li key={response.label}>
           {/* TODO: Investigate why this logic seems to be backwards */}
           {!response.isLink
             ? (
@@ -90,7 +93,8 @@ class Eligibility extends React.Component {
         >
           <div className="card">
             {!this.state.questions[0].focused
-            && <small className="back-button" onClick={() => { this.previousQuestion(); }}>Previous Question</small>}
+            // eslint-disable-next-line
+            && <small role="button" className="back-button" onClick={() => { this.previousQuestion(); }}>Previous Question</small>}
             <div className="card-body">
               <p>{question.text}</p>
             </div>

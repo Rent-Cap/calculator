@@ -1,3 +1,4 @@
+/* eslint-disable */
 import moment from 'moment';
 import {
   calculateTotalAmountOwedToTenant, determineRentOnDateFromRentRanges, determineMaxRentFromRentRanges, checkFlags,

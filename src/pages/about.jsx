@@ -8,7 +8,10 @@ const About = () => (
     <SEO title="About" />
     <h1>About</h1>
     <h2>Who built the site</h2>
-    <p>This site was built by the Code For San Francisco Brigade and the Tech Equity Collaborative with legal help from Community Legal Services in East Palo Alto.</p>
+    <p>
+This site was built by the Code For San Francisco Brigade and the Tech Equity Collaborative
+      with legal help from Community Legal Services in East Palo Alto.
+    </p>
     <div className="row">
       <AttributionCard
         name="John Doe"

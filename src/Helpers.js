@@ -21,7 +21,7 @@ export function calculateMaxRent(pastRent = 0, cpi = 0.033) {
 export function determineRentOnDateFromRentRanges(targetDate, rentRanges = []) {
   if (!targetDate) throw new Error('No target date given.');
   let rent;
-  for (let i = 0; i < rentRanges.length; i++) {
+  for (let i = 0; i < rentRanges.length; i += 1) {
     const daysBefore = targetDate.diff(rentRanges[i].startDate, 'days', true);
     const daysAfter = rentRanges[i].endDate.diff(targetDate, 'days', true);
     if (daysBefore >= 0 && daysAfter >= 0) rent = rentRanges[i].rent;
@@ -42,7 +42,7 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
   const mar152019 = moment([2019, 2, 15]);
   const pastRent = determineRentOnDateFromRentRanges(mar152019, rentRanges);
 
-  for (let i = 0; i < rentRanges.length; i++) {
+  for (let i = 0; i < rentRanges.length; i += 1) {
     const { rent } = rentRanges[i];
     const start = rentRanges[i].startDate;
     const end = rentRanges[i].endDate;
@@ -60,7 +60,8 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
 
 // Eligibility Helpers
 
-export const checkFlags = (str, flags) => {
+export const checkFlags = (queryString, flags) => {
+  let str = queryString.slice(0);
   if (!str) return false;
   const logicalOperators = {
     and: '&&',
@@ -89,8 +90,9 @@ export const checkFlags = (str, flags) => {
       result += token;
       term = '';
     }
-    i++;
+    i += 1;
   }
+  // eslint-disable-next-line
   return eval(result);
 };
 
@@ -102,7 +104,7 @@ function Question(text, order) {
   this.active = false;
   this.order = order || 0;
   this.variableText = false;
-  QUESTION_ID++;
+  QUESTION_ID += 1;
 }
 
 // const template = new Question('', 0)
@@ -111,7 +113,7 @@ const q2 = new Question('Is your building at least 15 years old? This applies to
 const q3 = new Question('Do you share a kitchen or bathroom with your landlord?', 2);
 const q4 = new Question('How many units are there in your building or on the property? If you rent a room in a single-family home, click "One".', 3);
 const q5 = new Question('Is your building owned by a corporation, real estate investment trust (REIT), or LLC in which at least one member is a corporation? Not sure who owns your building? Check with your city’s planning department.', 4);
-const q5_2 = new Question('Do you rent a room in your landlord’s house/apartment or live in an ADU on your landlord’s property? An accessory dwelling unit (ADU) is an additional separate living space located on a property.', 4);
+const q5a = new Question('Do you rent a room in your landlord’s house/apartment or live in an ADU on your landlord’s property? An accessory dwelling unit (ADU) is an additional separate living space located on a property.', 4);
 const q6 = new Question('Does your landlord live with you and is s/he currently renting out more than 2 rooms or accessory dwelling units? An accessory dwelling unit is an additional separate living space located on a property.', 5);
 const q7 = new Question('Is a portion of your rent paid for by a government agency or with a housing voucher? Affordable housing units are exempt from the Tenant Protection Act.', 6);
 const q8 = new Question('Has anyone in your building unit lived there for at least 24 months?', 1);
@@ -136,8 +138,8 @@ q2.responseList = [{ value: q3, label: 'Yes' }, { value: conclusion1, label: 'No
 // NOTE: if 'no' then no just-cause eviction protection
 q3.responseList = [{ value: q4, label: 'Yes' }, { value: q4, label: 'No' }];
 q4.responseList = [{ value: q5, label: 'One' }, { label: 'Two', value: q10 }, { label: 'Three or more', value: temp, flowResult: 'three' }];
-q5.responseList = [{ label: 'Yes', value: q5_2 }, { value: conclusion1, label: 'No' }];
-q5_2.responseList = [{ label: 'Yes', value: q6 }, { value: conclusion1, label: 'No' }];
+q5.responseList = [{ label: 'Yes', value: q5a }, { value: conclusion1, label: 'No' }];
+q5a.responseList = [{ label: 'Yes', value: q6 }, { value: conclusion1, label: 'No' }];
 // NOTE: If no, then no just-cause eviction protection
 q6.responseList = [{ label: 'Yes', value: q7 }, { label: 'No', value: q7 }];
 q7.responseList = [{ label: 'Yes', value: temp, flowResult: 'voucher-yes' }, { label: 'No', value: q9 }];
@@ -148,7 +150,10 @@ q10.responseList = [{ label: 'Yes', value: temp, flowResult: 'landlord-yes' }, {
 conclusion3.responseList = [{ label: 'Calculate my Rent Cap', isLink: true }];
 conclusion4.responseList = [{ label: 'Calculate my Rent Cap', isLink: true }];
 // NOTE: ALWAYS keep temp in the last index
-export const questions = [q1, q2, q3, q4, q5, q5_2, q6, q7, q8, q9, q10, conclusion1, conclusion2, conclusion3, conclusion4, temp];
+export const questions = [
+  q1, q2, q3, q4, q5, q5a, q6, q7, q8, q9, q10,
+  conclusion1, conclusion2, conclusion3, conclusion4, temp,
+];
 
 // red, blue, yellow, green
 const conclusions = [conclusion1, conclusion2, conclusion3, conclusion4];
@@ -156,12 +161,13 @@ const conclusions = [conclusion1, conclusion2, conclusion3, conclusion4];
 export function queryToArray(query) {
   const result = [];
   const pairs = query.split('&');
-  for (let i = 0; i < pairs.length; i++) {
-    if (!pairs[i]) continue;
-    const pair = pairs[i].split('=');
-    const key = decodeURIComponent(pair[0]);
-    const value = decodeURIComponent(pair[1]);
-    result.push([key, value]);
+  for (let i = 0; i < pairs.length; i += 1) {
+    if (pairs[i]) {
+      const pair = pairs[i].split('=');
+      const key = decodeURIComponent(pair[0]);
+      const value = decodeURIComponent(pair[1]);
+      result.push([key, value]);
+    }
   }
   return result;
 }
@@ -183,9 +189,11 @@ const questionIdToFlowResult = {
 // use query array to construct flag object
 function queryArrayToFlagState(query) {
   const result = {};
-  for (let i = 0; i < query.length; i++) {
+  for (let i = 0; i < query.length; i += 1) {
     const flag = questionIdToFlag[query[i][0]];
     if (flag) {
+      // TODO: Use array destructuring
+      // eslint-disable-next-line
       result[flag] = query[i][1];
     }
   }
@@ -249,28 +257,31 @@ function getConclusionFromQuery(query = []) {
     default:
       throw new Error('Unknown flow result');
   }
-  for (let i = 0; i < logic.length; i++) {
+  for (let i = 0; i < logic.length; i += 1) {
     if (checkFlags(logic[i], flags)) {
       return conclusions[i];
     }
   }
   console.error('Did not return conclusion text properly from flags', flags);
+  return 1;
 }
 
 const deactivateChildren = (root) => {
   if (!root) return;
+  /* eslint-disable */
   root.active = false;
   root.focused = false;
+  /* eslint-enable */
 
   // Reset all questions below this child
   if (root.responseList) {
-    for (let i = 0; i < root.responseList.length; i++) {
+    for (let i = 0; i < root.responseList.length; i += 1) {
       const response = root.responseList[i];
       response.active = false;
     }
   }
 
-  for (let i = 0; i < root.responseList.length; i++) {
+  for (let i = 0; i < root.responseList.length; i += 1) {
     deactivateChildren(root.responseList[i].value);
   }
 };
@@ -282,26 +293,31 @@ export function getQuestionStateFromQuery(query = '') {
     const question = questionsCopy[0];
     questionsCopy[0].active = true;
     questionsCopy[0].focused = true;
-    for (let i = 0; i < question.responseList.length; i++) {
+    for (let i = 0; i < question.responseList.length; i += 1) {
       deactivateChildren(question.responseList[i].value);
     }
   }
   const queryArray = queryToArray(query);
-  for (let i = 0; i < queryArray.length; i++) {
+  for (let i = 0; i < queryArray.length; i += 1) {
     const term = queryArray[i];
+    // eslint-disable-next-line
     const questionIdx = questionsCopy.findIndex((q) => q.id == term[0]);
-    // TODO: Check if question ID is in the conclusion mapping. If it is, set the text to the appropriate conclusion
+    // TODO: Check if question ID is in the conclusion mapping.
+    // If it is, set the text to the appropriate conclusion
     const question = questionsCopy[questionIdx];
     question.focused = false;
     question.responseList.forEach((r) => {
+      /* eslint-disable */
       r.active = false;
       r.focused = false;
+      /* eslint-enable */
     });
+    // eslint-disable-next-line
     const responseIdx = question.responseList.findIndex((r) => r.label == term[1]);
 
     // Hide all responses
-    for (let i = 0; i < question.responseList.length; i++) {
-      deactivateChildren(question.responseList[i].value);
+    for (let j = 0; j < question.responseList.length; j += 1) {
+      deactivateChildren(question.responseList[j].value);
     }
 
     const response = questionsCopy[questionIdx].responseList[responseIdx];

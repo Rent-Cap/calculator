@@ -1,17 +1,17 @@
 import { Link } from 'gatsby';
-import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+// import PropTypes from 'prop-types';
 import React from 'react';
 import SEO from './Seo';
 import 'bootstrap/dist/css/bootstrap.css';
-import { PrimaryButton, SecondaryButton } from './Buttons';
-import i18n from '../i18n';
-import { withTranslation } from 'react-i18next';
+// import { PrimaryButton, SecondaryButton } from './Buttons';
+// import i18n from '../i18n';
 import logo from '../images/logo.svg';
 
-const Header = ({ siteTitle, t }) => (
+const Header = ({ t }) => (
   <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <SEO title="Home" />
-    <Link className="navbar-brand" to="/"><img src={logo} /></Link>
+    <Link className="navbar-brand" to="/"><img alt="logo" src={logo} /></Link>
     {/* <div className="container"> */}
     <div className="TODO-Add-Hamburger" id="navbarNavAltMarkup">
       <div className="navbar-nav">
@@ -19,7 +19,7 @@ const Header = ({ siteTitle, t }) => (
           {t('eligible')}
         </Link>
         <Link className="nav-item nav-link" to="/calculator">
-          I'm eligible (Calculator)
+          I&apos;m eligible (Calculator)
         </Link>
         {/* <Link to="/resources">
           Resources
@@ -39,12 +39,12 @@ const Header = ({ siteTitle, t }) => (
   </nav>
 );
 
-Header.propTypes = {
-  siteTitle: PropTypes.string,
-};
+// Header.propTypes = {
+//   siteTitle: PropTypes.string,
+// };
 
-Header.defaultProps = {
-  siteTitle: 'Rent Cap',
-};
+// Header.defaultProps = {
+//   siteTitle: 'Rent Cap',
+// };
 
 export default withTranslation()(Header);

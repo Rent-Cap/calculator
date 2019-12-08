@@ -5,7 +5,9 @@
   "version": "0.1.0",
   "author": "Reid Sherman <reidsherman@gmail.com>",
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "@react-pdf/renderer": "^1.6.8",
+    "babel-jest": "^24.9.0",
     "bootstrap": "^4.3.1",
     "gatsby": "^2.17.11",
     "gatsby-image": "^2.2.31",
@@ -16,6 +18,7 @@
     "gatsby-source-filesystem": "^2.1.36",
     "gatsby-transformer-sharp": "^2.3.3",
     "i18next": "^19.0.0",
+    "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dates": "^21.5.0",
@@ -28,7 +31,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
     "babel-preset-gatsby": "^0.2.22",
     "eslint": "^6.7.2",
     "eslint-config-airbnb": "^18.0.1",
@@ -54,8 +56,8 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "test": "jest",
-    "lint": "./node_modules/.bin/eslint .",
-    "lintfix": "./node_modules/.bin/eslint . --fix"
+    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore . --ext js --ext jsx",
+    "lintfix": "./node_modules/.bin/eslint --ignore-path .gitignore . --ext js --ext jsx --fix"
   },
   "repository": {
     "type": "git",
