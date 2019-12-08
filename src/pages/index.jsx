@@ -1,14 +1,14 @@
 import React from "react"
+import { Link } from "gatsby";
+import { withTranslation } from 'react-i18next';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 
 import Layout from "../components/Layout"
-import { withTranslation } from 'react-i18next';
 import { PrimaryButton2, SecondaryButton } from "../components/Buttons";
-import { Link } from "gatsby";
 
-const IndexPage = ({ t }) => {
+const IndexPage = () => {
   return (
   <Layout>
     <div className="index row">
