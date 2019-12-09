@@ -29,7 +29,7 @@ class Header extends React.Component {
 
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className={`navbar navbar-expand-lg navbar-light bg-light${this.state.showMenu ? ' active' : ''}`}>
         <div onClick={this.handleOutsideClick} className={`overlay${this.state.showMenu ? ' active' : ''}`} />
         <SEO title="Home" />
         <Link className={`navbar-brand${this.state.showMenu ? ' hidden' : ''}`} to="/"><img alt="logo" src={logo} /></Link>
