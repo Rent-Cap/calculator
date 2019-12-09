@@ -212,7 +212,7 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">What is your zip code?</h5>
-            <input className="form-control" type="number" onChange={(e) => this.setCpiFromZip(e)} placeholder="Your 5 digit zip code" />
+            <input className="form-control" type="text" onChange={(e) => this.setCpiFromZip(e)} placeholder="Your 5 digit zip code" />
             {this.state.town
               && (
               <small><strong>{this.state.town}</strong>{this.state.county
