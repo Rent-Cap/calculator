@@ -4,9 +4,12 @@ import { withTranslation } from 'react-i18next';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
-import person from '../images/person.svg'
-import calc from '../images/calc.svg'
-import home from '../images/home.svg'
+// import person from '../images/person.svg'
+// import calc from '../images/calc.svg'
+// import home from '../images/home.svg'
+import interiorUndraw from '../images/interior_undraw.svg'
+import calcUndraw from '../images/calculator_undraw.svg'
+import helpUndraw from '../images/helpful_undraw.svg'
 
 import Layout from '../components/Layout';
 import { PrimaryButton2, SecondaryButton } from '../components/Buttons';
@@ -25,12 +28,12 @@ const IndexPage = () => (
         <Link to="/eligibility"><PrimaryButton2>Am I Protected?</PrimaryButton2></Link>
       </div>
       <div className="image-container col-sm">
-        <img alt="house" src={home} className="hero-image" />
+        <img alt="house" src={interiorUndraw} />
       </div>
     </div>
     <div className="index calculator row">
       <div className="image-container col-sm">
-        <img alt="calc" src={calc} className="calculator-image" />
+        <img alt="calc" src={calcUndraw} />
       </div>
       <div className="index-cell col-lg">
         <h1>How much can my landlord charge in rent?</h1>
@@ -52,7 +55,7 @@ const IndexPage = () => (
         <Link to="#"><SecondaryButton>Coming soon</SecondaryButton></Link>
       </div>
       <div className="image-container col-sm">
-        <img alt="lawyer" src={person} className="lawyer-image" />
+        <img alt="lawyer" src={helpUndraw} />
       </div>
     </div>
   </Layout>
