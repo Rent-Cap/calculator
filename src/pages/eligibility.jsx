@@ -3,7 +3,7 @@ import { Link } from 'gatsby';
 // import { navigate } from '@reach/router';
 import Layout from '../components/Layout';
 import { getQuestionStateFromQuery, queryToArray, questions } from '../Helpers';
-import { SecondaryButton, PrimaryButton } from '../components/Buttons';
+import { PrimaryButton2, PrimaryButton } from '../components/Buttons';
 import './eligibility.css';
 
 class Eligibility extends React.Component {
@@ -85,11 +85,11 @@ class Eligibility extends React.Component {
           {/* TODO: Investigate why this logic seems to be backwards */}
           {!response.isLink
             ? (
-              <SecondaryButton onClick={() => this.handleClick(idx, idx2)}>
+              <PrimaryButton2 onClick={() => this.handleClick(idx, idx2)}>
                 <span className={`${response.active ? 'active ' : ''}choice`}>
                   {response.label}
                 </span>
-              </SecondaryButton>
+              </PrimaryButton2>
             )
             : <Link to="/calculator"><PrimaryButton>{response.label}</PrimaryButton></Link>}
         </li>

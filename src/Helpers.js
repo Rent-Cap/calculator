@@ -41,9 +41,9 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
   if (rentRanges.length < 1) return result;
   const mar152019 = moment([2019, 2, 15]);
   const pastRent = determineRentOnDateFromRentRanges(mar152019, rentRanges);
-
   for (let i = 0; i < rentRanges.length; i += 1) {
     const { rent } = rentRanges[i];
+    const r = parseFloat(rent);
     const start = rentRanges[i].startDate;
     const end = rentRanges[i].endDate;
 
@@ -52,8 +52,7 @@ export function calculateTotalAmountOwedToTenant(rentRanges = [], cpi = 0.033) {
     const diff = rentRanges[i].endDate.diff(janFirst2020, 'months', true);
     const isAfterJan2020 = diff > 0;
     const monthsPaidAfterJan2020 = isAfterJan2020 ? end.diff(start, 'months', true) : 0;
-
-    result += (rent > maxRent) ? (rent - maxRent) * monthsPaidAfterJan2020 : 0;
+    result += (r > maxRent) ? (r - maxRent) * monthsPaidAfterJan2020 : 0;
   }
   return result > 0 ? parseFloat(result).toFixed(2) : 0;
 }

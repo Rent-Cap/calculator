@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 // import i18n from '../i18n';
 import logo from '../images/logo.svg';
 import hamburger from '../images/hamburger.svg';
+import close from '../images/close.svg';
+import NavLinks from './NavLinks';
 
 class Header extends React.Component {
   constructor() {
@@ -15,12 +17,12 @@ class Header extends React.Component {
     this.state = {
       showMenu: false,
     };
-    this.showNavLinks = this.showNavLinks.bind(this);
+    this.toggleNavLinks = this.toggleNavLinks.bind(this);
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
   }
 
-  showNavLinks() {
-    this.setState({ showMenu: true });
+  toggleNavLinks() {
+    this.setState({ showMenu: !this.state.showMenu });
   }
 
   handleOutsideClick() {
@@ -32,27 +34,13 @@ class Header extends React.Component {
       <nav className={`navbar navbar-expand-lg navbar-light bg-light${this.state.showMenu ? ' active' : ''}`}>
         <div onClick={this.handleOutsideClick} className={`overlay${this.state.showMenu ? ' active' : ''}`} />
         <SEO title="Home" />
-        <Link className={`navbar-brand${this.state.showMenu ? ' hidden' : ''}`} to="/"><img alt="logo" src={logo} /></Link>
-        <div className={`navlink-group${this.state.showMenu ? ' active' : ''}`}>
-          <div className="navbar-nav">
-            <Link className="nav-item nav-link" to="/bill">
-              What is the Tenant Protection Act?
-            </Link>
-            <Link className="nav-item nav-link" to="/eligibility">
-              Am I Protected
-            </Link>
-            <Link className="nav-item nav-link" to="/calculator">
-              Rent Calculator
-            </Link>
-            <Link className="nav-item nav-link" to="/resources">
-              Resources (Coming Soon)
-            </Link>
-            <Link className="nav-item nav-link" to="/about">
-              About Us
-            </Link>
-          </div>
+        <Link className="navbar-brand" to="/"><img alt="logo" src={logo} /></Link>
+        <NavLinks />
+        <div className={`hamburger${this.state.showMenu ? ' hidden' : ''}`} onClick={this.toggleNavLinks}>
+          <img style={{ display: this.state.showMenu ? 'none' : 'block' }} alt="hamburger" src={hamburger} />
+          <img style={{ display: this.state.showMenu ? 'block' : 'none' }} alt="close" src={close} />
+          <NavLinks showMenu={this.state.showMenu} />
         </div>
-        <div className={`hamburger${this.state.showMenu ? ' hidden' : ''}`} onClick={this.showNavLinks}><img alt="hamburger" src={hamburger} /></div>
         {/* TODO: Add spanish translation */}
         {/* <SecondaryButton onClick={() => i18n.changeLanguage('en')}>English</SecondaryButton>
         <SecondaryButton onClick={() => i18n.changeLanguage('es')}>Espanol</SecondaryButton> */}

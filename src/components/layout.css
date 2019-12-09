@@ -634,6 +634,9 @@ footer {
 nav {
   margin-bottom: 30px;
 }
+.navbar {
+  min-height: 82.87px;
+}
 .navbar.active {
   justify-content: flex-end;
   text-align: right;
@@ -680,7 +683,8 @@ nav {
   width: 64px;
   height: 64px;
   display: none;
-  position: relative;
+  position: absolute;
+  right: 0;
   z-index: 2;
   cursor: pointer;
 }
@@ -695,6 +699,13 @@ nav {
   top: 0;
   left: 0;
   display: block;
+  background: black;
+  opacity: 0.5;
+}
+.navbar-brand {
+  position: absolute;
+  left: 0;
+  padding-left: 10px;
 }
 .navbar-brand > img {
   opacity: 0.75;
@@ -705,11 +716,24 @@ nav {
 }
 .index-cell > a {
   position: relative;
-  z-index: 3;
+  /* z-index: 3; */
 }
 .navlink-group.active > .navbar-nav > a {
   color: var(--blue);
   font-weight: 700;
+}
+.navlink-group {
+  position: absolute;
+  right: 0;
+  /* top: 0; */
+}
+.navlink-group.active {
+  top: 100%;
+  padding: 15px 10px;
+  width: 350px;
+  /* height: 100vh; */
+  background: var(--light);
+
 }
 @media only screen and (max-width: 1000px) {
   .navlink-group {
@@ -719,11 +743,11 @@ nav {
     display: block;
   }
   .hamburger.hidden {
-    display: none;
+    /* display: none; */
   }
   .navlink-group.active {
     display: block;
-    position: relative;
+    /* position: relative; */
     z-index: 3;
   }
 }

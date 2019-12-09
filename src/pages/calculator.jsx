@@ -37,7 +37,7 @@ class Calculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pastRent: 0,
+      pastRent: undefined,
       currentRent: 0,
       cpi: 0.033,
       showSection: false,
@@ -48,6 +48,7 @@ class Calculator extends React.Component {
       rentRanges: [emptyRentRange1, emptyRentRange2],
     };
     this.handleInput = handleInput.bind(this);
+    this.handlePastRentChange = this.handlePastRentChange.bind(this);
     this.addRentRange = this.addRentRange.bind(this);
     this.removeRentRange = this.removeRentRange.bind(this);
     this.calculateRentIncreasePercentage = this.calculateRentIncreasePercentage.bind(this);
@@ -84,6 +85,13 @@ class Calculator extends React.Component {
       this.setState({ pastRent: t[idx].rent });
     }
     this.setState({ rentRanges: t });
+    const temp = calculateTotalAmountOwedToTenant(t, this.state.cpi);
+    this.props.changeRefund(temp);
+  }
+
+  handlePastRentChange(e) {
+    this.setState({ pastRent: e.target.value });
+    this.handleRentRangeValueChange(e, 0);
   }
 
   removeRentRange(idx) {
@@ -105,17 +113,8 @@ class Calculator extends React.Component {
   }
 
   render() {
-    const { t, refund, changeRefund } = this.props;
+    const { t, refund } = this.props;
     const maxRent = calculateMaxRent(this.state.pastRent, this.state.cpi);
-    // const rentIncreasePercentage = this.calculateRentIncreasePercentage();
-    const updateRefund = () => {
-      const temp = calculateTotalAmountOwedToTenant(this.state.rentRanges, this.state.cpi);
-      changeRefund(temp);
-    };
-    // TODO: This is not a performant solution because it will update every render.
-    // Instead, put all vars the refund relies on (currentRent, maxRent, any rent increases, etc)
-    // and have the refund as a calculated value from those other values.
-    updateRefund();
     const { rentRanges } = this.state;
     const that = this;
     const rentRangeList = rentRanges.map((rent, idx) => (
@@ -126,17 +125,22 @@ class Calculator extends React.Component {
           ? (
             <div className="input-group mb-3">
               <div className="input-group-prepend">
-                <span className="input-group-text" id="basic-addon1"><strong>Rent on March 15, 2019 $</strong></span>
+                <span className="input-group-text"><strong>Rent on March 15, 2019</strong></span>
               </div>
-              <input type="number" value={this.state.pastRent} className="form-control" placeholder="Rent on March 15, 2019" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">$</span>
+                </div>
+                <input type="number" value={this.state.pastRent} className="form-control" placeholder="Rent on March 15, 2019" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
+              </div>
             </div>
           ) : (
             <div className="rent-input">
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                  <span className="input-group-text" id="basic-addon1">$</span>
+                  <span className="input-group-text">$</span>
                 </div>
-                <input type="number" className="form-control" placeholder={idx === 0 ? 'Rent on March 15, 2019' : 'Rent'} onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
+                <input type="number" className="form-control" placeholder="Monthly Rent" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
               </div>
               <DateRangePicker
                 endDate={rentRanges[idx].endDate}
@@ -151,29 +155,6 @@ class Calculator extends React.Component {
               />
             </div>
           )}
-        {/* <div className="rent-input">
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon1">$</span>
-            </div>
-            <input type="number" value={idx === 0 ? this.state.pastRent :
-              rentRanges[idx].rent} className="form-control" placeholder={idx === 0 ?
-                'Rent on March 15, 2019' : 'Rent'} onChange={(e) =>
-                  this.handleRentRangeValueChange(e, idx)} />
-          </div>
-          {idx > 0
-            && (
-            <DateRangePicker
-              endDate={rentRanges[idx].endDate}
-              endDateId="endDate"
-              focusedInput={rentRanges[idx].focusedInput}
-              isOutsideRange={() => null}
-              onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
-              onFocusChange={(e) => this.handleFocusChange(e, idx)}
-              startDate={rentRanges[idx].startDate}
-              startDateId="startDate"
-              orientation="vertical"
-            /> */}
       </li>
     ));
     return (
@@ -193,9 +174,9 @@ class Calculator extends React.Component {
           </p>
           {this.state.hideMailChimp
             ? (
-              <PrimaryButton2 onClick={() => this.setState({ hideMailChimp: false })}>
+              <PrimaryButton onClick={() => this.setState({ hideMailChimp: false })}>
                 I am interested in signing up to learn more
-              </PrimaryButton2>
+              </PrimaryButton>
             ) : (
               <MailChimp />
             )}
@@ -203,14 +184,6 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
-            {/* <select name="cpi-picker" onChange={(e) => this.handleInput('cpi', e)}>
-              <option value="0.033" label="Select your location"></option>
-              <option value="0.04" label="Oakland-Hayward-San Francisco"></option>
-              <option value="0.033" label="Los Angeles-Long Beach-Anaheim"></option>
-              <option value="0.022" label="San Diego-Carlsbad"></option>
-              <option value="0.028" label="Riverside-San Bernardino-Ontario"></option>
-              <option value="0.033" label="Other"></option>
-            </select> */}
             <div className="dropdown">
               <button onClick={() => { this.setState({ showCpiDropdown: !this.state.showCpiDropdown }); }} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {this.state.cpiSelection}
@@ -279,31 +252,22 @@ Any other region of California
               </div>
             </div>
             <br />
-            <h5>What was your rent on March 15, 2019?</h5>
+            <h5>What was your rent on or since March 15, 2019?</h5>
             <div className="input-group mb-3">
               <div className="input-group-prepend">
-                <span className="input-group-text" id="basic-addon1">$</span>
+                <span className="input-group-text">$</span>
               </div>
               <input
                 type="number"
                 className="form-control"
                 value={this.state.pastRent}
-                onChange={(e) => this.handleInput('pastRent', e)}
+                placeholder="Monthly Rent"
+                onChange={(e) => this.handlePastRentChange(e)}
               />
             </div>
           </div>
         </div>
         <br />
-        {/* <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">What was your rent on March 15, 2019?</h5>
-            <input
-              type="number"
-              value={this.state.pastRent}
-              onChange={(e) => this.handleInput('pastRent', e)}
-            />
-          </div>
-        </div> */}
         <br />
         {this.state.pastRent > 0
           ? (
@@ -326,16 +290,6 @@ Any other region of California
           ) : (
             <h4>Your results will show here after you input your rent.</h4>
           )}
-        {/* TODO: Double check this date */}
-        {/* <h4>
-Your maximum rent should be no greater than
-          <strong>
-$
-            {maxRent}
-            {' '}
-on March 15, 2020
-          </strong>
-        </h4> */}
         <Disclaimer />
         <br />
         <br />
@@ -346,32 +300,14 @@ on March 15, 2020
               you may be owed as a rollback.
             </h4>
           ) : (
-            <PrimaryButton style={{ width: '100%' }} onClick={() => this.setState({ showSection: true })}>
+            <PrimaryButton2 style={{ width: '100%' }} onClick={() => this.setState({ showSection: true })}>
               Was I overcharged?
-            </PrimaryButton>
+            </PrimaryButton2>
           )}
         <br />
         {this.state.showSection
           && (
           <section>
-            {/* <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">What is your current rent?</h5>
-                <input
-                  type="number"
-                  value={this.state.currentRent}
-                  onChange={(e) => this.handleInput('currentRent', e)}
-                />
-                <br />
-                <h4>
-Your rent increased by
-                  {rentIncreasePercentage > 0 ? rentIncreasePercentage : 0}
-%. Your maximum rent is
-                  {maxRent}
-. Enter your rent information below to calculate a potential refund
-                </h4>
-              </div>
-            </div> */}
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Enter your rent history from January 1st, 2020 to now.</h5>
