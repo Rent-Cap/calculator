@@ -46,7 +46,7 @@ code {
   width: 200px;
   border-radius: 100%;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .lawyer-image {
@@ -54,14 +54,14 @@ code {
   width: 200px;
   border-radius: 100%;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .calculator-image {
   height: 200px;
   width: 200px;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .image-container {
