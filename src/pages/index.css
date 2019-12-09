@@ -56,12 +56,21 @@ code {
   align-items: center;
 }
 
+.calculator.row {
+  position: relative;
+}
+
 @media only screen and (max-width: 892px) {
-  /* section {
-    flex-wrap: wrap;
-    justify-content: center;
-  } */
   .calculator.row {
-    flex-direction: column-reverse
+    flex-direction: column-reverse;
+    min-height: auto;
+  }
+  .index-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .image-container {
+    display: none;
   }
 }

@@ -2,8 +2,8 @@ import i18n from 'i18next';
 // import XHR from 'i18next-xhr-backend';
 // import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
-import english from './en.json'
-import spanish from './es.json'
+import english from './en.json';
+import spanish from './es.json';
 
 i18n
   // .use(XHR)
@@ -11,15 +11,15 @@ i18n
   .use(initReactI18next) // bind react-i18next to the instance
   .init({
     fallbackLng: 'en',
-    lng: "en",
+    lng: 'en',
     debug: false,
     resources: {
       en: {
-        translation: english
+        translation: english,
       },
       es: {
-        translation: spanish
-      }
+        translation: spanish,
+      },
     },
 
     interpolation: {
@@ -27,7 +27,7 @@ i18n
     },
     react: {
       wait: true,
-    }
+    },
 
     // react i18next special options (optional)
     // override if needed - omit if ok with defaults
