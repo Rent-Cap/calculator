@@ -1,8 +1,11 @@
+/* eslint-disable */
 import React, { useState } from 'react'
 import './mailchimp.css'
 import { PrimaryButton } from './Buttons'
 
-const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE, setStatus}) => {
+const subscribe = async ({
+  email_address, status, FNAME, LNAME, ZIPCODE, setStatus,
+}) => {
   // NOTE: run site with netlify dev if there were any changes to subscribe.js
   const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:8888/' : '/'
   const url = `${uri}api/subscribe`
@@ -11,7 +14,7 @@ const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE, setStatu
     status,
     FNAME,
     LNAME,
-    ZIPCODE
+    ZIPCODE,
   }
 
   try {
@@ -23,7 +26,6 @@ const subscribe = async ({email_address, status, FNAME, LNAME, ZIPCODE, setStatu
     if (res.status === 200) {
       console.log('success')
       setStatus('success')
-
     } else if (res.status === 400) {
       setStatus('failure')
       console.log('400 status, acct already exists?')
@@ -46,19 +48,20 @@ const MailChimp = () => {
   return (
     <div className="mailchimp container">
       <div className="mailchimp row">
-        <input className="form-control" type="text" placeholder="First Name (optional)" onChange={e => setFName(e.target.value)} type="text" value={FNAME}/>
-        <input className="form-control" type="text" placeholder="Last Name (optional)" onChange={e => setLName(e.target.value)} value={LNAME}/>
+        <input className="form-control" type="text" placeholder="First Name (optional)" onChange={(e) => setFName(e.target.value)} type="text" value={FNAME} />
+        <input className="form-control" type="text" placeholder="Last Name (optional)" onChange={(e) => setLName(e.target.value)} value={LNAME} />
       </div>
       <div className="mailchimp row">
-        <input className="form-control" style={{border: status === 'failure' ? '1px solid red' : ''}} type="email" placeholder="Email (required)" onChange={e => setEmail(e.target.value)} value={email_address}/>
-        <input className="form-control" type="number" placeholder="Zip Code (optional)" onChange={e => setZip(e.target.value)} value={ZIPCODE}/>
+        <input className="form-control" style={{ border: status === 'failure' ? '1px solid red' : '' }} type="email" placeholder="Email (required)" onChange={(e) => setEmail(e.target.value)} value={email_address} />
+        <input className="form-control" type="number" placeholder="Zip Code (optional)" onChange={(e) => setZip(e.target.value)} value={ZIPCODE} />
       </div>
       {/* Clever way of avoiding bot form inputs */}
-      <div style={{position: "absolute", left: "-5000px"}} aria-hidden="true">
-        <input type="text" name="b_b9c7524f0dc0712a8752cf555_66232ac6c7" tabIndex="-1" value=""/>
+      <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+        <input type="text" name="b_b9c7524f0dc0712a8752cf555_66232ac6c7" tabIndex="-1" value="" onChange={() => {}} />
       </div>
       <small>{statusText}</small>
-      {status !== 'success' &&
+      {status !== 'success'
+        && (
         <PrimaryButton onClick={() => {
           const subscriber = {
             FNAME,
@@ -69,12 +72,13 @@ const MailChimp = () => {
             setStatus,
           }
           subscribe(subscriber)
-        }}>
+        }}
+        >
           Subscribe
         </PrimaryButton>
-      }
+        )}
     </div>
   )
 }
-                
+
 export default MailChimp

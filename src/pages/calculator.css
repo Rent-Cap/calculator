@@ -1,5 +1,9 @@
 .calculator-results {
   display: flex;
+  margin: 0;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 .calculator-results li {
   margin-right: 40px;
@@ -8,4 +12,15 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+.calculator-description {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.dropdown-toggle {
+  width: 100%;
+}
+.dropdown-menu {
+  width: 100%;
 }

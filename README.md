@@ -1,5 +1,9 @@
 # mailchimp subscription local testing
 
+install netlify cli tools
+
+`npm i -g netlify-cli`
+
 turn off local server and run:
 
 `netlify dev`
