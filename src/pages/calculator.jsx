@@ -4,7 +4,7 @@ import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
 import Disclaimer from '../components/Disclaimer';
 import {
-  PrimaryButton, SuccessButton, DangerButton,
+  PrimaryButton, SuccessButton, DangerButton, SecondaryButton,
 } from '../components/Buttons';
 import { handleInput, calculateTotalAmountOwedToTenant, calculateMaxRent } from '../Helpers';
 import GenerateLetter from '../components/GenerateLetter';
@@ -13,6 +13,7 @@ import Layout from '../components/Layout';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import SEO from '../components/Seo';
+import MailChimp from '../components/MailChimp'
 import './calculator.css'
 
 const emptyRentRange1 = {
@@ -42,6 +43,7 @@ class Calculator extends React.Component {
       showSection: false,
       showLetter: false,
       showCpiDropdown: false,
+      hideMailChimp: true,
       cpiSelection: INITIAL_SELECTION,
       rentRanges: [emptyRentRange1, emptyRentRange2],
     };
@@ -76,12 +78,9 @@ class Calculator extends React.Component {
   }
 
   handleRentRangeValueChange(e, idx) {
-    console.log(typeof idx)
     const t = this.state.rentRanges.slice(0);
     t[idx].rent = e.target.value;
     if (idx === 0) {
-      console.log('idx', idx)
-      console.log('t', t)
       this.setState({ pastRent: t[idx].rent });
     }
     this.setState({ rentRanges: t });
@@ -181,16 +180,26 @@ class Calculator extends React.Component {
       <Layout>
         <SEO title="Calculator" />
         <h1>{t('calculator-title')}</h1>
-        <p>
-          Renters eligible for protection under the Tenant Protection Act are protected against
-          rent increases that exceed 10% in a one year period or the cost of living + 5%,
-          whichever is lower. If you have received a rent increase you can use our calculator
-          to help you determine what the allowable increase is under the law, and if your rent
-          increase exceeds the limit.
-          Eligible renters who got a rent increase anytime on or after March 15, 2019
-          should use the rent calculator, as increases in 2019 may be rolled back
-          resulting in a rent reduction.
-        </p>
+        <div className="calculator-description">
+          <p>
+            Renters eligible for protection under the Tenant Protection Act are protected against
+            rent increases that exceed 10% in a one year period or the cost of living + 5%,
+            whichever is lower. If you have received a rent increase you can use our calculator
+            to help you determine what the allowable increase is under the law, and if your rent
+            increase exceeds the limit.
+            Eligible renters who got a rent increase anytime on or after March 15, 2019
+            should use the rent calculator, as increases in 2019 may be rolled back
+            resulting in a rent reduction.
+          </p>
+          {this.state.hideMailChimp
+            ? (
+              <SecondaryButton onClick={() => this.setState({ hideMailChimp: false })}>
+                I am interested in signing up to learn more
+              </SecondaryButton>
+            ) : (
+              <MailChimp />
+            )}
+        </div>
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
@@ -297,23 +306,25 @@ Any other region of California
         </div> */}
         <br />
         {this.state.pastRent > 0
-          && (
-          <ul className="calculator-results">
-            <li>
-              <h4>Max Increase</h4>
-              <h3>
-                {parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%
-              </h3>
-              <small>5% Base + {parseFloat(this.state.cpi * 100).toFixed(2)}% CPI</small>
-              <br />
-              <small><strong>{this.state.cpiSelection !== INITIAL_SELECTION ? this.state.cpiSelection : ''}</strong></small>
-            </li>
-            <li>
-              <h4>Allowable Rent</h4>
-              <h3>${maxRent}</h3>
-              <small>Beginning Jan 1, 2020</small>
-            </li>
-          </ul>
+          ? (
+            <ul className="calculator-results">
+              <li>
+                <h4>Max Increase</h4>
+                <h3>
+                  {parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%
+                </h3>
+                <small>5% Base + {parseFloat(this.state.cpi * 100).toFixed(2)}% CPI</small>
+                <br />
+                <small><strong>{this.state.cpiSelection !== INITIAL_SELECTION ? this.state.cpiSelection : ''}</strong></small>
+              </li>
+              <li>
+                <h4>Allowable Rent</h4>
+                <h3>${maxRent}</h3>
+                <small>Beginning Jan 1, 2020</small>
+              </li>
+            </ul>
+          ) : (
+            <h4>Your results will show here after you input your rent.</h4>
           )}
         {/* TODO: Double check this date */}
         {/* <h4>
@@ -331,7 +342,8 @@ on March 15, 2020
         {this.state.showSection
           ? (
             <h4>
-              Enter your information below to determine how much money you may be owed.
+              Enter your information below to determine how much money
+              you may be owed as a rollback.
             </h4>
           ) : (
             <PrimaryButton onClick={() => this.setState({ showSection: true })}>

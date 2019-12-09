@@ -693,7 +693,7 @@ nav {
   display: block;
 }
 .navbar-brand > img {
-  opacity: 75%;
+  opacity: 0.75;
   width: 112px;
 }
 .navbar-brand.hidden {

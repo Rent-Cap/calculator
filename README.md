@@ -1,4 +1,14 @@
-Implementation Details:
+# mailchimp subscription local testing
+
+install netlify cli tools
+
+`npm i -g netlify-cli`
+
+turn off local server and run:
+
+`netlify dev`
+
+# Implementation Details:
 
 https://docs.google.com/document/d/1IcFjxBmZRbTheXbnGTMHMFiG3NOe_ffL3XWnMZnB-4E/edit
 

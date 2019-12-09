@@ -16,12 +16,37 @@ code {
   /* min-height: 400px; */
   margin: 40px 0;
 }
+
+/* TODO: Move to separate file */
+.mailchimp.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.mailchimp.row {
+  justify-content: center;
+  margin: 5px;
+}
+.mailchimp.row:first-child {
+  margin-bottom: 20px;
+}
+.mailchimp.row > input {
+  padding: 10px;
+  width: auto;
+}
+
+.mailchimp.row > input:first-child {
+  margin-right: 20px;
+}
+
 .hero-image {
   height: 200px;
   width: 200px;
   border-radius: 100%;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .lawyer-image {
@@ -29,14 +54,14 @@ code {
   width: 200px;
   border-radius: 100%;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .calculator-image {
   height: 200px;
   width: 200px;
   margin: 40px;
-  opacity: 50%;
+  opacity: 0.5;
 }
 
 .image-container {
@@ -72,5 +97,11 @@ code {
   }
   .image-container {
     display: none;
+  }
+  .mailchimp.row > .form-control{
+    width: 45%;
+  }
+  .mailchimp.row > .form-control:first-child{
+    margin-right: 10px;
   }
 }
