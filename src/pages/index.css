@@ -13,30 +13,30 @@ code {
 }
 
 .row {
-  min-height: 400px;
+  /* min-height: 400px; */
   margin: 40px 0;
 }
 .hero-image {
-  background: grey;
   height: 200px;
   width: 200px;
   border-radius: 100%;
   margin: 40px;
+  opacity: 50%;
 }
 
 .lawyer-image {
-  background: grey;
   height: 200px;
   width: 200px;
   border-radius: 100%;
   margin: 40px;
+  opacity: 50%;
 }
 
 .calculator-image {
-  background: grey;
   height: 200px;
   width: 200px;
   margin: 40px;
+  opacity: 50%;
 }
 
 .image-container {

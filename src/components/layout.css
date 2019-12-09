@@ -635,8 +635,8 @@ nav {
   margin-bottom: 30px;
 }
 .contributor {
-  width: 300px;
-  margin: 15px;
+  width: 100%;
+  margin: 15px 0;
 }
 .portrait {
   border-radius: 100%;
@@ -691,6 +691,10 @@ nav {
   top: 0;
   left: 0;
   display: block;
+}
+.navbar-brand > img {
+  opacity: 75%;
+  width: 112px;
 }
 .navbar-brand.hidden {
   display: none;

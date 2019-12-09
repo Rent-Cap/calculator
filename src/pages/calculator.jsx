@@ -13,6 +13,7 @@ import Layout from '../components/Layout';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import SEO from '../components/Seo';
+import './calculator.css'
 
 const emptyRentRange1 = {
   rent: 0,
@@ -29,6 +30,8 @@ const emptyRentRange2 = {
   id: 1,
 };
 
+const INITIAL_SELECTION = 'Which region best describes where you live?'
+
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
@@ -39,7 +42,7 @@ class Calculator extends React.Component {
       showSection: false,
       showLetter: false,
       showCpiDropdown: false,
-      cpiSelection: 'Where do you live',
+      cpiSelection: INITIAL_SELECTION,
       rentRanges: [emptyRentRange1, emptyRentRange2],
     };
     this.handleInput = handleInput.bind(this);
@@ -73,8 +76,14 @@ class Calculator extends React.Component {
   }
 
   handleRentRangeValueChange(e, idx) {
+    console.log(typeof idx)
     const t = this.state.rentRanges.slice(0);
     t[idx].rent = e.target.value;
+    if (idx === 0) {
+      console.log('idx', idx)
+      console.log('t', t)
+      this.setState({ pastRent: t[idx].rent });
+    }
     this.setState({ rentRanges: t });
   }
 
@@ -99,7 +108,7 @@ class Calculator extends React.Component {
   render() {
     const { t, refund, changeRefund } = this.props;
     const maxRent = calculateMaxRent(this.state.pastRent, this.state.cpi);
-    const rentIncreasePercentage = this.calculateRentIncreasePercentage();
+    // const rentIncreasePercentage = this.calculateRentIncreasePercentage();
     const updateRefund = () => {
       const temp = calculateTotalAmountOwedToTenant(this.state.rentRanges, this.state.cpi);
       changeRefund(temp);
@@ -114,27 +123,74 @@ class Calculator extends React.Component {
       <li key={rent.id}>
         {idx > 1
             && <DangerButton className="remove" onClick={() => that.removeRentRange(idx)}>&times;</DangerButton>}
-        <div>
-            Rent: $
-          <input type="number" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
-          <DateRangePicker
-            endDate={rentRanges[idx].endDate}
-            endDateId="endDate"
-            focusedInput={rentRanges[idx].focusedInput}
-            isOutsideRange={() => null}
-            onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
-            onFocusChange={(e) => this.handleFocusChange(e, idx)}
-            startDate={rentRanges[idx].startDate}
-            startDateId="startDate"
-            orientation="vertical"
-          />
-        </div>
+        {idx === 0
+          ? (
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="basic-addon1"><strong>Rent on March 15, 2019 $</strong></span>
+              </div>
+              <input type="number" value={this.state.pastRent} className="form-control" placeholder="Rent on March 15, 2019" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
+            </div>
+          ) : (
+            <div className="rent-input">
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="number" className="form-control" placeholder={idx === 0 ? 'Rent on March 15, 2019' : 'Rent'} onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
+              </div>
+              <DateRangePicker
+                endDate={rentRanges[idx].endDate}
+                endDateId="endDate"
+                focusedInput={rentRanges[idx].focusedInput}
+                isOutsideRange={() => null}
+                onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+                onFocusChange={(e) => this.handleFocusChange(e, idx)}
+                startDate={rentRanges[idx].startDate}
+                startDateId="startDate"
+                orientation="vertical"
+              />
+            </div>
+          )}
+        {/* <div className="rent-input">
+          <div className="input-group mb-3">
+            <div className="input-group-prepend">
+              <span className="input-group-text" id="basic-addon1">$</span>
+            </div>
+            <input type="number" value={idx === 0 ? this.state.pastRent :
+              rentRanges[idx].rent} className="form-control" placeholder={idx === 0 ?
+                'Rent on March 15, 2019' : 'Rent'} onChange={(e) =>
+                  this.handleRentRangeValueChange(e, idx)} />
+          </div>
+          {idx > 0
+            && (
+            <DateRangePicker
+              endDate={rentRanges[idx].endDate}
+              endDateId="endDate"
+              focusedInput={rentRanges[idx].focusedInput}
+              isOutsideRange={() => null}
+              onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+              onFocusChange={(e) => this.handleFocusChange(e, idx)}
+              startDate={rentRanges[idx].startDate}
+              startDateId="startDate"
+              orientation="vertical"
+            /> */}
       </li>
     ));
     return (
       <Layout>
         <SEO title="Calculator" />
         <h1>{t('calculator-title')}</h1>
+        <p>
+          Renters eligible for protection under the Tenant Protection Act are protected against
+          rent increases that exceed 10% in a one year period or the cost of living + 5%,
+          whichever is lower. If you have received a rent increase you can use our calculator
+          to help you determine what the allowable increase is under the law, and if your rent
+          increase exceeds the limit.
+          Eligible renters who got a rent increase anytime on or after March 15, 2019
+          should use the rent calculator, as increases in 2019 may be rolled back
+          resulting in a rent reduction.
+        </p>
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">Where do you live?</h5>
@@ -203,20 +259,33 @@ Riverside-San Bernardino-Ontario
                   onClick={() => {
                     this.setState({
                       showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'Other',
+                      cpiSelection: 'Any other region of California',
                       cpi: 0.033,
                     });
                   }}
                   className="dropdown-item"
                 >
-Other
+Any other region of California
                 </a>
               </div>
+            </div>
+            <br />
+            <h5>What was your rent on March 15, 2019?</h5>
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="basic-addon1">$</span>
+              </div>
+              <input
+                type="number"
+                className="form-control"
+                value={this.state.pastRent}
+                onChange={(e) => this.handleInput('pastRent', e)}
+              />
             </div>
           </div>
         </div>
         <br />
-        <div className="card">
+        {/* <div className="card">
           <div className="card-body">
             <h5 className="card-title">What was your rent on March 15, 2019?</h5>
             <input
@@ -225,10 +294,29 @@ Other
               onChange={(e) => this.handleInput('pastRent', e)}
             />
           </div>
-        </div>
+        </div> */}
         <br />
+        {this.state.pastRent > 0
+          && (
+          <ul className="calculator-results">
+            <li>
+              <h4>Max Increase</h4>
+              <h3>
+                {parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%
+              </h3>
+              <small>5% Base + {parseFloat(this.state.cpi * 100).toFixed(2)}% CPI</small>
+              <br />
+              <small><strong>{this.state.cpiSelection !== INITIAL_SELECTION ? this.state.cpiSelection : ''}</strong></small>
+            </li>
+            <li>
+              <h4>Allowable Rent</h4>
+              <h3>${maxRent}</h3>
+              <small>Beginning Jan 1, 2020</small>
+            </li>
+          </ul>
+          )}
         {/* TODO: Double check this date */}
-        <h4>
+        {/* <h4>
 Your maximum rent should be no greater than
           <strong>
 $
@@ -236,18 +324,25 @@ $
             {' '}
 on March 15, 2020
           </strong>
-        </h4>
+        </h4> */}
         <Disclaimer />
         <br />
         <br />
-        <PrimaryButton onClick={() => this.setState({ showSection: true })}>
-          Was I overcharged?
-        </PrimaryButton>
+        {this.state.showSection
+          ? (
+            <h4>
+              Enter your information below to determine how much money you may be owed.
+            </h4>
+          ) : (
+            <PrimaryButton onClick={() => this.setState({ showSection: true })}>
+              Was I overcharged?
+            </PrimaryButton>
+          )}
         <br />
         {this.state.showSection
           && (
           <section>
-            <div className="card">
+            {/* <div className="card">
               <div className="card-body">
                 <h5 className="card-title">What is your current rent?</h5>
                 <input
@@ -264,10 +359,10 @@ Your rent increased by
 . Enter your rent information below to calculate a potential refund
                 </h4>
               </div>
-            </div>
+            </div> */}
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Enter your rent history from March 15, 2019 to now.</h5>
+                <h5 className="card-title">Enter your rent history from January 1st, 2020 to now.</h5>
                 <section className="rent-increases">
                   <ul>{rentRangeList}</ul>
                   <SuccessButton className="add" onClick={this.addRentRange}>+</SuccessButton>
@@ -279,10 +374,6 @@ Your rent increased by
 Based on the information provided, you may be owed $
               {refund}
             </h4>
-            <small>NOTE: You are only refunded money paid in excess rent after Jan 1 2020</small>
-            <br />
-            <Disclaimer />
-            <br />
             <br />
             {/* <PrimaryButton onClick={() => this.setState({showLetter: true})}>
             Generate a letter to your landlord</PrimaryButton> */}

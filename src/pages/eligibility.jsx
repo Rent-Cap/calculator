@@ -116,7 +116,16 @@ class Eligibility extends React.Component {
     });
     return (
       <Layout>
-        <h1>Are you eligible?</h1>
+        <h1>Am I Protected?</h1>
+        <p>
+          On January 1, 2020 the Tenant Protection Act will expand
+          protections to 8 million more renters,
+          making it the single largest advancement for renters rights in California history!
+          The new law ensures renters are protected from unjust evictions and unfair rent increases.
+          However, tenants must satisfy a set of eligibility requirements to be covered by the law.
+          Answer the questions below to understand if you are covered under the
+          Tenant Protection Act.
+        </p>
         <div className="eligibility-container">
           <ul className="question-list">{questionList}</ul>
         </div>

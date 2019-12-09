@@ -1,0 +1,11 @@
+.calculator-results {
+  display: flex;
+}
+.calculator-results li {
+  margin-right: 40px;
+}
+.rent-input {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

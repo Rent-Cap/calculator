@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import SEO from '../components/Seo';
-import AttributionCard from '../components/AttributionCard';
+// import AttributionCard from '../components/AttributionCard';
 
 const About = () => (
   <Layout>
@@ -12,26 +12,13 @@ const About = () => (
 This site was built by the Code For San Francisco Brigade and the Tech Equity Collaborative
       with legal help from Community Legal Services in East Palo Alto.
     </p>
-    <div className="row">
-      <AttributionCard
-        name="John Doe"
-        description="Contributed by writing code for the website"
-        title="Product Manager"
-        links={[{ type: 'github', href: 'www.gh.com' }, { type: 'linkedin', href: 'www.li.com' }]}
-      />
-      <AttributionCard
-        name="John Doe"
-        description="Contributed by writing code for the website"
-        title="Product Manager"
-        links={[{ type: 'github', href: 'www.gh.com' }, { type: 'linkedin', href: 'www.li.com' }]}
-      />
-      <AttributionCard
-        name="John Doe"
-        description="Contributed by writing code for the website"
-        title="Product Manager"
-        links={[{ type: 'github', href: 'www.gh.com' }, { type: 'linkedin', href: 'www.li.com' }]}
-      />
-    </div>
+    {/* <AttributionCard
+      name="John Doe"
+      description="Contributed by writing code for the website"
+      title="Product Manager"
+      links={[{ type: 'github', href: 'www.gh.com' }, { type: 'linkedin', href: 'www.li.com' }]}
+    />
+    */}
     <h2>How can I contribute</h2>
     <p>
 Join the #rentcap channel in the Code For San Francisco slack (

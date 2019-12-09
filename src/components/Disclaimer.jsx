@@ -1,12 +1,8 @@
 import React from 'react';
-import { Link } from 'gatsby';
 
 const Disclaimer = () => (
   <small>
-This does not consider local rent control ordinances, please check
-    <Link to="/resources/local-ordinances">here</Link>
-    {' '}
-for your local laws.
+This does not consider local rent control ordinances, please check your local laws.
   </small>
 );
 
