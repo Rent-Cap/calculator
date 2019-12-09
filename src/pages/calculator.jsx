@@ -15,6 +15,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import SEO from '../components/Seo';
 import MailChimp from '../components/MailChimp'
 import './calculator.css'
+import zipToCpi from '../zipToCpi.json'
 
 const emptyRentRange1 = {
   rent: 0,
@@ -31,7 +32,16 @@ const emptyRentRange2 = {
   id: 1,
 };
 
-const INITIAL_SELECTION = 'Which region best describes where you live?'
+const areaToCpi = {
+  Rest_Of_California: 0.033,
+  'Oakland-Hayward-San_Francisco': 0.04,
+  'Los_Angeles-Long_Beach-Anaheim': 0.033,
+  'San_Diego-Carlsbad': 0.022,
+  'Riverside-San_Bernardino-Ontario': 0.028,
+
+}
+
+const INITIAL_SELECTION = 'Enter your zip code'
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -42,30 +52,31 @@ class Calculator extends React.Component {
       cpi: 0.033,
       showSection: false,
       showLetter: false,
-      showCpiDropdown: false,
+      // area: INITIAL_SELECTION,
+      // showCpiDropdown: false,
       hideMailChimp: true,
       cpiSelection: INITIAL_SELECTION,
       rentRanges: [emptyRentRange1, emptyRentRange2],
     };
     this.handleInput = handleInput.bind(this);
     this.handlePastRentChange = this.handlePastRentChange.bind(this);
-    this.addRentRange = this.addRentRange.bind(this);
     this.removeRentRange = this.removeRentRange.bind(this);
     this.calculateRentIncreasePercentage = this.calculateRentIncreasePercentage.bind(this);
     this.handleRentRangeValueChange = this.handleRentRangeValueChange.bind(this);
     this.handleRentRangeDateChange = this.handleRentRangeDateChange.bind(this);
     this.handleFocusChange = this.handleFocusChange.bind(this);
+    this.setCpiFromZip = this.setCpiFromZip.bind(this);
+    this.addRentRange = this.addRentRange.bind(this);
   }
 
-  addRentRange() {
-    const t = this.state.rentRanges.slice(0);
-    const r = { ...emptyRentRange2 };
-    r.startDate = moment(t[t.length - 1].endDate);
-    r.endDate = moment(t[t.length - 1].endDate).add(1, 'months', true);
-    r.id = +new Date();
-    t.push(r);
-    r.rent = 0;
-    this.setState(() => ({ rentRanges: t }));
+  setCpiFromZip(e) {
+    const input = e.target.value
+    const zip = zipToCpi[input]
+    if (zip) {
+      const cpi = areaToCpi[zip.area]
+      const cpiSelection = zip.area
+      this.setState({ cpi, cpiSelection })
+    }
   }
 
   handleRentRangeDateChange(e, idx) {
@@ -110,6 +121,17 @@ class Calculator extends React.Component {
     const t = this.state.rentRanges.slice(0);
     t[idx].focusedInput = focusedInput;
     this.setState({ rentRanges: t });
+  }
+
+  addRentRange() {
+    const t = this.state.rentRanges.slice(0);
+    const r = { ...emptyRentRange2 };
+    r.startDate = moment(t[t.length - 1].endDate);
+    r.endDate = moment(t[t.length - 1].endDate).add(1, 'months', true);
+    r.id = +new Date();
+    t.push(r);
+    r.rent = 0;
+    this.setState(() => ({ rentRanges: t }));
   }
 
   render() {
@@ -183,8 +205,10 @@ class Calculator extends React.Component {
         </div>
         <div className="card">
           <div className="card-body">
-            <h5 className="card-title">Where do you live?</h5>
-            <div className="dropdown">
+            <h5 className="card-title">What is your zip code?</h5>
+            <input className="form-control" type="number" onChange={(e) => this.setCpiFromZip(e)} placeholder="zip" />
+
+            {/* <div className="dropdown">
               <button onClick={() => { this.setState({ showCpiDropdown: !this.state.showCpiDropdown }); }} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {this.state.cpiSelection}
               </button>
@@ -250,7 +274,7 @@ Riverside-San Bernardino-Ontario
 Any other region of California
                 </a>
               </div>
-            </div>
+            </div> */}
             <br />
             <h5>What was your rent on or since March 15, 2019?</h5>
             <div className="input-group mb-3">

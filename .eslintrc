@@ -17,6 +17,7 @@
     "prefer-destructuring": [0],
     "semi": [0],
     "no-undef": [0],
+    "max-len": [1],
     "react/jsx-one-expression-per-line": [0]
   }
 }
