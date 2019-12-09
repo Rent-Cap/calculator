@@ -128,6 +128,7 @@ const conclusion2 = new Question('Your building is not covered by rent control f
 const conclusion3 = new Question('Your building is covered by rent control from the Tenant Protection Act. However, your building is not covered by the just-cause eviction protection.', 17);
 // green
 const conclusion4 = new Question('Great news! Your building is covered by both rent control and just-cause eviction protection from the Tenant Protection Act! Click here for a list of just-cause reasons for eviction.', 17);
+const errorResponse = new Question('Sorry, encountered an error. Please go to the previous question.', 17);
 
 q1.active = true;
 q1.focused = true;
@@ -149,6 +150,7 @@ q10.responseList = [{ label: 'Yes', value: temp, flowResult: 'landlord-yes' }, {
 
 conclusion3.responseList = [{ label: 'Calculate my Rent Cap', isLink: true }];
 conclusion4.responseList = [{ label: 'Calculate my Rent Cap', isLink: true }];
+errorResponse.responseList = [{ label: 'Go back' }];
 // NOTE: ALWAYS keep temp in the last index
 export const questions = [
   q1, q2, q3, q4, q5, q5a, q6, q7, q8, q9, q10,
@@ -263,7 +265,7 @@ function getConclusionFromQuery(query = []) {
     }
   }
   console.error('Did not return conclusion text properly from flags', flags);
-  return 1;
+  return errorResponse;
 }
 
 const deactivateChildren = (root) => {
