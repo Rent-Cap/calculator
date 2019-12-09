@@ -5,8 +5,10 @@
   "version": "0.1.0",
   "author": "Reid Sherman <reidsherman@gmail.com>",
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "@react-pdf/renderer": "^1.6.8",
     "base-64": "^0.1.0",
+    "babel-jest": "^24.9.0",
     "bootstrap": "^4.3.1",
     "dotenv": "^8.2.0",
     "gatsby": "^2.17.11",
@@ -20,6 +22,7 @@
     "i18next": "^19.0.0",
     "netlify-lambda": "^1.6.3",
     "node-fetch": "^2.6.0",
+    "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dates": "^21.5.0",
@@ -31,8 +34,15 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "babel-jest": "^24.9.0",
+    "babel-eslint": "^10.0.3",
     "babel-preset-gatsby": "^0.2.22",
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-loader": "^3.0.2",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "gatsby-plugin-eslint": "^2.0.8",
     "identity-obj-proxy": "^3.0.0",
     "install": "^0.13.0",
     "jest": "^24.9.0",
@@ -50,7 +60,9 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "test": "jest",
-    "postinstall": "netlify-lambda install"
+    "postinstall": "netlify-lambda install",
+    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore . --ext js --ext jsx",
+    "lintfix": "./node_modules/.bin/eslint --ignore-path .gitignore . --ext js --ext jsx --fix"
   },
   "repository": {
     "type": "git",
