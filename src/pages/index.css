@@ -28,13 +28,13 @@ code {
 .mailchimp.row {
   justify-content: center;
   margin: 5px;
-}
-.mailchimp.row:first-child {
+  width: 100%;
   margin-bottom: 20px;
 }
+
 .mailchimp.row > input {
   padding: 10px;
-  width: auto;
+  width: 45%;
 }
 
 .mailchimp.row > input:first-child {

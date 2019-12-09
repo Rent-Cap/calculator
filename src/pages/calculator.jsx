@@ -4,7 +4,7 @@ import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
 import Disclaimer from '../components/Disclaimer';
 import {
-  PrimaryButton, SuccessButton, DangerButton, SecondaryButton,
+  PrimaryButton, SuccessButton, DangerButton, PrimaryButton2,
 } from '../components/Buttons';
 import { handleInput, calculateTotalAmountOwedToTenant, calculateMaxRent } from '../Helpers';
 import GenerateLetter from '../components/GenerateLetter';
@@ -193,9 +193,9 @@ class Calculator extends React.Component {
           </p>
           {this.state.hideMailChimp
             ? (
-              <SecondaryButton onClick={() => this.setState({ hideMailChimp: false })}>
+              <PrimaryButton2 onClick={() => this.setState({ hideMailChimp: false })}>
                 I am interested in signing up to learn more
-              </SecondaryButton>
+              </PrimaryButton2>
             ) : (
               <MailChimp />
             )}
@@ -346,7 +346,7 @@ on March 15, 2020
               you may be owed as a rollback.
             </h4>
           ) : (
-            <PrimaryButton onClick={() => this.setState({ showSection: true })}>
+            <PrimaryButton style={{ width: '100%' }} onClick={() => this.setState({ showSection: true })}>
               Was I overcharged?
             </PrimaryButton>
           )}

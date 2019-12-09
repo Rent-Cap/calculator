@@ -62,15 +62,17 @@ const MailChimp = () => {
       <small>{statusText}</small>
       {status !== 'success'
         && (
-        <PrimaryButton onClick={() => {
-          const subscriber = {
-            FNAME,
-            LNAME,
-            email_address,
-            ZIPCODE,
-            status: 'subscribed',
-            setStatus,
-          }
+        <PrimaryButton 
+          style={{ width: '100%' }}
+          onClick={() => {
+            const subscriber = {
+              FNAME,
+              LNAME,
+              email_address,
+              ZIPCODE,
+              status: 'subscribed',
+              setStatus,
+            }
           subscribe(subscriber)
         }}
         >
