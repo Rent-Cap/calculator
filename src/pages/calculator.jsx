@@ -52,6 +52,8 @@ class Calculator extends React.Component {
       cpi: 0.033,
       showSection: false,
       showLetter: false,
+      town: undefined,
+      county: undefined,
       // area: INITIAL_SELECTION,
       // showCpiDropdown: false,
       hideMailChimp: true,
@@ -73,9 +75,13 @@ class Calculator extends React.Component {
     const input = e.target.value
     const zip = zipToCpi[input]
     if (zip) {
-      const cpi = areaToCpi[zip.area]
-      const cpiSelection = zip.area
-      this.setState({ cpi, cpiSelection })
+      const cpi = areaToCpi[zip.area];
+      const town = zip.town;
+      const county = zip.county;
+      const cpiSelection = zip.area;
+      this.setState({
+        cpi, cpiSelection, town, county,
+      })
     }
   }
 
@@ -206,75 +212,15 @@ class Calculator extends React.Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">What is your zip code?</h5>
-            <input className="form-control" type="number" onChange={(e) => this.setCpiFromZip(e)} placeholder="zip" />
-
-            {/* <div className="dropdown">
-              <button onClick={() => { this.setState({ showCpiDropdown: !this.state.showCpiDropdown }); }} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {this.state.cpiSelection}
-              </button>
-              <div style={{ display: this.state.showCpiDropdown ? 'block' : 'none' }} className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a
-                  onClick={() => {
-                    this.setState({
-                      showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'Oakland-Hayward-San Francisco',
-                      cpi: 0.04,
-                    });
-                  }}
-                  className="dropdown-item"
-                >
-Oakland-Hayward-San Francisco
-                </a>
-                <a
-                  onClick={() => {
-                    this.setState({
-                      showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'Los Angeles-Long Beach-Anaheim',
-                      cpi: 0.033,
-                    });
-                  }}
-                  className="dropdown-item"
-                >
-Los Angeles-Long Beach-Anaheim
-                </a>
-                <a
-                  onClick={() => {
-                    this.setState({
-                      showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'San Diego-Carlsbad',
-                      cpi: 0.022,
-                    });
-                  }}
-                  className="dropdown-item"
-                >
-San Diego-Carlsbad
-                </a>
-                <a
-                  onClick={() => {
-                    this.setState({
-                      showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'Riverside-San Bernardino-Ontario',
-                      cpi: 0.028,
-                    });
-                  }}
-                  className="dropdown-item"
-                >
-Riverside-San Bernardino-Ontario
-                </a>
-                <a
-                  onClick={() => {
-                    this.setState({
-                      showCpiDropdown: !this.state.showCpiDropdown,
-                      cpiSelection: 'Any other region of California',
-                      cpi: 0.033,
-                    });
-                  }}
-                  className="dropdown-item"
-                >
-Any other region of California
-                </a>
-              </div>
-            </div> */}
+            <input className="form-control" type="number" onChange={(e) => this.setCpiFromZip(e)} placeholder="Your 5 digit zip code" />
+            {this.state.town
+              && (
+              <small><strong>{this.state.town}</strong>{this.state.county
+                && <strong>, {this.state.county} County</strong>}
+              </small>
+              )}
+            <br />
+            <br />
             <br />
             <h5>What was your rent on or since March 15, 2019?</h5>
             <div className="input-group mb-3">
