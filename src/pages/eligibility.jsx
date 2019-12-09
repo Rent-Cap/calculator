@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import { navigate } from '@reach/router';
+// import { navigate } from '@reach/router';
 import Layout from '../components/Layout';
 import { getQuestionStateFromQuery, queryToArray, questions } from '../Helpers';
 import { SecondaryButton, PrimaryButton } from '../components/Buttons';
@@ -11,6 +11,7 @@ class Eligibility extends React.Component {
     super(props);
     this.state = {
       questions,
+      query: '',
     };
     this.handleClick = this.handleClick.bind(this);
     this.setStateFromQuery = this.setStateFromQuery.bind(this);
@@ -19,32 +20,35 @@ class Eligibility extends React.Component {
 
   componentDidMount() {
     // decode query params to determine initial flowchart state
-    this.setStateFromQuery();
+    this.setStateFromQuery(this.props.location.search.substring(1));
   }
 
-  componentDidUpdate(prevProps) {
+  // eslint-disable-next-line
+  componentDidUpdate(prevProps, prevState) {
     // eslint-disable-next-line
-    if (this.props.location.search !== prevProps.location.search) {
+    if (this.state.query !== prevState.query) {
+      // TODO: Enable back button history
+      // window.history.pushState({}, 'history', `${this.state.query}`)
+      // this.props.location.search = this.state.query
       this.setStateFromQuery();
     }
   }
 
-  setStateFromQuery() {
+  setStateFromQuery(q) {
     // eslint-disable-next-line
-    const query = this.props.location.search.substring(1);
-    const q = getQuestionStateFromQuery(query);
-    this.setState({ questions: q });
+    const query = q || this.state.query.substring(1)
+    const updatedQuestions = getQuestionStateFromQuery(query);
+    this.setState({ questions: updatedQuestions });
   }
 
   handleClick(questionIdx, responseIdx) {
     const q = this.state.questions.slice(0);
     const question = q[questionIdx];
     const response = question.responseList[responseIdx];
-    const search = this.props.location.search.substring(1);
-
+    // const search = this.props.location.search.substring(1);
+    const search = this.state.query.substring(1);
     // TODO: Should be able to leave the query as a string instead of doing this
     let query = queryToArray(search);
-
     // if already exists in the array, change the value, otherwise push new value
     // NOTE: This is intentionally a double equals (==)
     // eslint-disable-next-line
@@ -57,16 +61,21 @@ class Eligibility extends React.Component {
       query.push([questionIdx, response.label]);
     }
     const queryString = query.map((a) => `${a[0]}=${a[1]}`).join('&');
-    navigate(`?${queryString}`);
+    // navigate(`?${queryString}`)
+    this.setState({ query: `?${queryString}` });
   }
 
   previousQuestion() {
-    const search = this.props.location.search.substring(1);
+    // const search = this.props.location.search.substring(1);
+    const search = this.state.query.substring(1);
     if (!search) return;
     const arr = search.split('&');
-    if (arr.length === 0) navigate('');
+    // if (arr.length === 0) navigate('')
+    if (arr.length === 0) return;
     arr.pop();
-    navigate(`?${arr.join('&')}`);
+    // navigate(`?${arr.join('&')}`)
+    const query = `?${arr.join('&')}`;
+    this.setState({ query });
   }
 
   render() {
