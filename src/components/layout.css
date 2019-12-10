@@ -684,7 +684,7 @@ nav {
   height: 64px;
   display: none;
   position: absolute;
-  right: 0;
+  right: 20px;
   z-index: 2;
   cursor: pointer;
 }
@@ -704,7 +704,7 @@ nav {
 }
 .navbar-brand {
   position: absolute;
-  left: 0;
+  left: 20px;
   padding-left: 10px;
 }
 .navbar-brand > img {
@@ -724,14 +724,14 @@ nav {
 }
 .navlink-group {
   position: absolute;
-  right: 0;
+  right: 20px;
   /* top: 0; */
 }
 .navlink-group.active {
   top: 100%;
-  padding: 15px 10px;
+  padding: 15px 25px;
   width: 350px;
-  /* height: 100vh; */
+  right: -20px;
   background: var(--light);
 }
 .container {
@@ -744,9 +744,6 @@ nav {
   }
   .hamburger {
     display: block;
-  }
-  .hamburger.hidden {
-    /* display: none; */
   }
   .navlink-group.active {
     display: block;

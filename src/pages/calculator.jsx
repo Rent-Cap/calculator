@@ -16,6 +16,7 @@ import SEO from '../components/Seo';
 import MailChimp from '../components/MailChimp'
 import './calculator.css'
 import zipToCpi from '../zipToCpi.json'
+import calendar from '../images/calendar.svg'
 
 const emptyRentRange1 = {
   rent: 0,
@@ -146,7 +147,7 @@ class Calculator extends React.Component {
     const { rentRanges } = this.state;
     const that = this;
     const rentRangeList = rentRanges.map((rent, idx) => (
-      <li key={rent.id}>
+      <li className="rent-input-row" key={rent.id}>
         {idx > 1
             && <DangerButton className="remove" onClick={() => that.removeRentRange(idx)}>&times;</DangerButton>}
         {idx === 0
@@ -170,21 +171,51 @@ class Calculator extends React.Component {
                 </div>
                 <input type="number" className="form-control" placeholder="Monthly Rent" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
               </div>
-              <DateRangePicker
-                endDate={rentRanges[idx].endDate}
-                endDateId="endDate"
-                focusedInput={rentRanges[idx].focusedInput}
-                isOutsideRange={() => null}
-                onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
-                onFocusChange={(e) => this.handleFocusChange(e, idx)}
-                startDate={rentRanges[idx].startDate}
-                startDateId="startDate"
-                orientation="vertical"
-              />
+              <div className="rent-date">
+                <div className="rent-date-label">
+                  <small>From</small>
+                  <small>To</small>
+                </div>
+                <div className="rent-date-picker">
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend date-icon">
+                      <img className="input-group-text" src={calendar} alt="calendar" />
+                    </div>
+                    <DateRangePicker
+                      endDate={rentRanges[idx].endDate}
+                      endDateId="endDate"
+                      focusedInput={rentRanges[idx].focusedInput}
+                      isOutsideRange={() => null}
+                      onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+                      onFocusChange={(e) => this.handleFocusChange(e, idx)}
+                      startDate={rentRanges[idx].startDate}
+                      startDateId="startDate"
+                      orientation="vertical"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
       </li>
     ));
+    const refundBreakdown = rentRanges.map((range, idx) => {
+      // const pastRent = rentRanges[0].rent
+      const r = parseFloat(range.rent);
+      const start = range.startDate;
+      const end = range.endDate;
+      const janFirst2020 = moment([2020, 0, 1]);
+      const diff = range.endDate.diff(janFirst2020, 'months', true);
+      const isAfterJan2020 = diff > 0;
+      const monthsPaidAfterJan2020 = isAfterJan2020 ? parseFloat(end.diff(start, 'months', true)).toFixed(2) : 0;
+      const val = (r > maxRent) ? (r - maxRent) * monthsPaidAfterJan2020 : 0;
+      return (
+        <li className={`calc-row${val === 0 ? ' zero' : ''}`}>
+          {idx > 0
+            && <small>({range.rent} - {maxRent}) * {monthsPaidAfterJan2020} Month{monthsPaidAfterJan2020 === 1 ? '' : 's'} = ${parseFloat(val).toFixed(2)}</small>}
+        </li>
+      )
+    })
     return (
       <Layout>
         <SEO title="Calculator" />
@@ -243,7 +274,7 @@ class Calculator extends React.Component {
           ? (
             <ul className="calculator-results">
               <li>
-                <h4>Max Increase</h4>
+                <h5 className="result-title">Max Increase</h5>
                 <h3>
                   {parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%
                 </h3>
@@ -252,7 +283,7 @@ class Calculator extends React.Component {
                 <small><strong>{this.state.cpiSelection !== INITIAL_SELECTION ? this.state.cpiSelection : ''}</strong></small>
               </li>
               <li>
-                <h4>Allowable Rent</h4>
+                <h5 className="result-title">Allowable Rent</h5>
                 <h3>${maxRent}</h3>
                 <small>Beginning Jan 1, 2020</small>
               </li>
@@ -288,10 +319,15 @@ class Calculator extends React.Component {
               </div>
             </div>
             <br />
-            <h4>
-Based on the information provided, you may be owed $
-              {refund}
+            <h4 className="refund-information">
+Based on the information provided, you may be owed
             </h4>
+            <div className="refund-container">
+              <h1>${refund}</h1>
+              <ul>
+                {refundBreakdown}
+              </ul>
+            </div>
             <br />
             {/* <PrimaryButton onClick={() => this.setState({showLetter: true})}>
             Generate a letter to your landlord</PrimaryButton> */}

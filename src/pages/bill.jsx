@@ -17,9 +17,16 @@ const About = () => (
     </ol>
     <h2>Protections from Unjust Evictions</h2>
     <p>
-      Under the Tenant Protection Act, eligible renters are protected from unjust evictions. This means your landlord must have a valid reason for evicting you as outlined below:
+      Under the Tenant Protection Act, eligible renters are protected from unjust evictions. This means your landlord must have a valid reason for evicting you.
     </p>
-    <p>(TODO)</p>
+    {/* <div className="evictions-container">
+      <div>
+        <h3>At Fault</h3>
+      </div>
+      <div>
+        <h3>No Fault</h3>
+      </div>
+    </div> */}
     <h2>Protections Against Unfair Rent Increases</h2>
     <p>
       Eligible renters are protected against rent increases that exceed 10% in a one year period or the cost of living + 5%, whichever is lower. This is often referred to as a “rent-cap” because it caps the amount your landlord can legally increase your rent year after year.
