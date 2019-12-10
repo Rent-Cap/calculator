@@ -324,9 +324,12 @@ Based on the information provided, you may be owed
             </h4>
             <div className="refund-container">
               <h1>${refund}</h1>
-              <ul>
-                {refundBreakdown}
-              </ul>
+              { refund > 0
+                && (
+                  <ul>
+                    {refundBreakdown}
+                  </ul>
+                )}
             </div>
             <br />
             {/* <PrimaryButton onClick={() => this.setState({showLetter: true})}>
