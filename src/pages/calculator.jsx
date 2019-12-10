@@ -42,7 +42,7 @@ const areaToCpi = {
 
 }
 
-const INITIAL_SELECTION = 'Enter your zip code'
+// const INITIAL_SELECTION = 'Enter your zip code'
 
 class Calculator extends React.Component {
   constructor(props) {
@@ -58,7 +58,8 @@ class Calculator extends React.Component {
       // area: INITIAL_SELECTION,
       // showCpiDropdown: false,
       hideMailChimp: true,
-      cpiSelection: INITIAL_SELECTION,
+      // cpiSelection: INITIAL_SELECTION,
+      cpiSelection: undefined,
       rentRanges: [emptyRentRange1, emptyRentRange2],
     };
     this.handleInput = handleInput.bind(this);
@@ -270,27 +271,24 @@ class Calculator extends React.Component {
         </div>
         <br />
         <br />
-        {this.state.pastRent > 0
-          ? (
-            <ul className="calculator-results">
-              <li>
-                <h5 className="result-title">Max Increase</h5>
-                <h3>
-                  {parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%
-                </h3>
-                <small>5% Base + {parseFloat(this.state.cpi * 100).toFixed(2)}% CPI</small>
-                <br />
-                <small><strong>{this.state.cpiSelection !== INITIAL_SELECTION ? this.state.cpiSelection : ''}</strong></small>
-              </li>
-              <li>
-                <h5 className="result-title">Allowable Rent</h5>
-                <h3>${maxRent}</h3>
-                <small>Beginning Jan 1, 2020</small>
-              </li>
-            </ul>
-          ) : (
-            <h4>Your results will show here after you input your rent.</h4>
-          )}
+        <ul className="calculator-results">
+          <li>
+            <h5 className="result-title">Max Increase</h5>
+            {this.state.cpiSelection
+              ? <h3>{parseFloat((0.05 + parseFloat(this.state.cpi)) * 100).toFixed(2)}%</h3>
+              : <h3>-</h3>}
+            <small>5% Base + {parseFloat(this.state.cpi * 100).toFixed(2)}% CPI</small>
+            <br />
+            <small><strong>{this.state.cpiSelection ? this.state.cpiSelection : ''}</strong></small>
+          </li>
+          <li>
+            <h5 className="result-title">Allowable Rent</h5>
+            {(maxRent > 0 && this.state.cpiSelection)
+              ? <h3>${maxRent}</h3>
+              : <h3>-</h3>}
+            <small>Beginning Jan 1, 2020</small>
+          </li>
+        </ul>
         <Disclaimer />
         <br />
         <br />
