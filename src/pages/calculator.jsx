@@ -16,6 +16,7 @@ import SEO from '../components/Seo';
 import MailChimp from '../components/MailChimp'
 import './calculator.css'
 import zipToCpi from '../zipToCpi.json'
+import calendar from '../images/calendar.svg'
 
 const emptyRentRange1 = {
   rent: 0,
@@ -146,7 +147,7 @@ class Calculator extends React.Component {
     const { rentRanges } = this.state;
     const that = this;
     const rentRangeList = rentRanges.map((rent, idx) => (
-      <li key={rent.id}>
+      <li className="rent-input-row" key={rent.id}>
         {idx > 1
             && <DangerButton className="remove" onClick={() => that.removeRentRange(idx)}>&times;</DangerButton>}
         {idx === 0
@@ -170,17 +171,30 @@ class Calculator extends React.Component {
                 </div>
                 <input type="number" className="form-control" placeholder="Monthly Rent" onChange={(e) => this.handleRentRangeValueChange(e, idx)} />
               </div>
-              <DateRangePicker
-                endDate={rentRanges[idx].endDate}
-                endDateId="endDate"
-                focusedInput={rentRanges[idx].focusedInput}
-                isOutsideRange={() => null}
-                onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
-                onFocusChange={(e) => this.handleFocusChange(e, idx)}
-                startDate={rentRanges[idx].startDate}
-                startDateId="startDate"
-                orientation="vertical"
-              />
+              <div className="rent-date">
+                <div className="rent-date-label">
+                  <small>From</small>
+                  <small>To</small>
+                </div>
+                <div className="rent-date-picker">
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <img className="input-group-text" src={calendar} alt="calendar" />
+                    </div>
+                    <DateRangePicker
+                      endDate={rentRanges[idx].endDate}
+                      endDateId="endDate"
+                      focusedInput={rentRanges[idx].focusedInput}
+                      isOutsideRange={() => null}
+                      onDatesChange={(e) => this.handleRentRangeDateChange(e, idx)}
+                      onFocusChange={(e) => this.handleFocusChange(e, idx)}
+                      startDate={rentRanges[idx].startDate}
+                      startDateId="startDate"
+                      orientation="vertical"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
       </li>
