@@ -17,7 +17,7 @@ const links = [
   },
   {
     to: '/resources',
-    label: 'Resources (Coming Soon)',
+    label: 'Resources',
   },
   {
     to: '/about',

@@ -16,7 +16,7 @@
 .calculator-description {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
 }
 .dropdown-toggle {
   width: 100%;
@@ -26,4 +26,7 @@
 }
 .form-control {
   min-width: 75px;
+}
+.calculator-description > h1 {
+  text-align: center;
 }

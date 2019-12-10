@@ -733,8 +733,11 @@ nav {
   width: 350px;
   /* height: 100vh; */
   background: var(--light);
-
 }
+.container {
+  max-width: 768px;  
+}
+
 @media only screen and (max-width: 1000px) {
   .navlink-group {
     display: none;
@@ -752,11 +755,11 @@ nav {
   }
 }
 
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
   html {
     font-size: 100%;
   }
   header {
     flex-direction: column;
   }
-}
+} */

@@ -188,8 +188,8 @@ class Calculator extends React.Component {
     return (
       <Layout>
         <SEO title="Calculator" />
-        <h1>{t('calculator-title')}</h1>
         <div className="calculator-description">
+          <h1>{t('calculator-title')}</h1>
           <p>
             Renters eligible for protection under the Tenant Protection Act are protected against
             rent increases that exceed 10% in a one year period or the cost of living + 5%,
@@ -271,7 +271,7 @@ class Calculator extends React.Component {
             </h4>
           ) : (
             <PrimaryButton2 style={{ width: '100%' }} onClick={() => this.setState({ showSection: true })}>
-              Was I overcharged?
+              Did your rent increase on or after January 1st, 2020?
             </PrimaryButton2>
           )}
         <br />
