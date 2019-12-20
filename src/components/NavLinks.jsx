@@ -15,10 +15,10 @@ const links = [
     to: '/calculator',
     label: 'Rent Calculator',
   },
-  {
-    to: '/resources',
-    label: 'Resources',
-  },
+  // {
+  //   to: '/resources',
+  //   label: 'Resources',
+  // },
   {
     to: '/about',
     label: 'About Us',
